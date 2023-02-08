@@ -31,8 +31,8 @@ import {
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
 import ExampleProductImage from './unnamed.jpg'
-import { FirestoreProvider, useFirestoreCollectionData, useFirestore, useFirebaseApp } from 'reactfire';
-import { doc, getFirestore, query, collection, orderBy } from 'firebase/firestore';
+import { FirestoreProvider, useFirestore, useFirebaseApp } from 'reactfire';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { IoShirtOutline, IoShirtSharp } from "react-icons/io5";
 
 const trademarkSymbol = '®';
@@ -51,6 +51,7 @@ function DrawerExample() {
   const firstField = React.useRef()
   const [ tempItems, setTempItems ] = React.useState(items)
 
+
   if (tempItems.length !== items.length) {
     setTempItems(items)
   }
@@ -63,41 +64,28 @@ function DrawerExample() {
   }
 
   async function createDeck() {
+    const db = getFirestore();
     console.log("Creating deck")
-    /*
-    create a new firestore document
-    */
-    console.log(items)
-    const db = getFirestore(app);
-
-    // Add a new document in collection "cities"
     await setDoc(doc(db, "decks", "test2"), {
-      /*
-      I need to map: 
-
-      { name
-        date
-        products [
-          { 
-            name
-            descriptions [
-              string
-            ]
-            image
-            pricing [
-              { price, quantity }
-            ]
-          }
-        ]
-      }
-
-      */
-
-      name: "",
-      state: "CA",
-      country: "USA"
+      name: "Test Deck 2",
+      date: "2021-09-01",
+      products: [
+        {
+          name: "Test Product 1",
+          descriptions: [
+            "Test Description 1",
+            "Test Description 2"
+          ],
+          image: "https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?as=&categorySearchTerm=&screenSize=large",
+          pricing: [
+            {
+              price: 10,
+              quantity: 10
+            },
+          ],
+        },
+      ],
     });
-
   }
 
   /* 
@@ -155,7 +143,7 @@ function DrawerExample() {
             <Button variant='outline' mr={3} onClick={onClose}>
               Continue Browsing
             </Button>
-            <Button colorScheme='green' onClick={createDeck}>Send Request</Button>
+            <Button colorScheme='green' onClick={() => createDeck()}>Send Request</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -192,7 +180,9 @@ const Items = (url) => {
   /*
   I can either have the drawer pop out when added or show a lil toast
   */
-
+  /*
+  I want to map t
+  */
   return (
     <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
         {data.results.map(product => (
@@ -224,9 +214,8 @@ const Header = () => {
   )
 }
 
-
-
 function App() {
+  const firestoreInstance = getFirestore(useFirebaseApp());
 
   const [ url, setUrl ] = React.useState(temp_url)
   const [ index, setIndex ] = React.useState(0)
@@ -253,28 +242,22 @@ function App() {
 
 
   return (
-    <ChakraProvider theme={theme}>
-      <Header />
-      <HStack justify={"center"}>
-        {/* <Button size="" variant='ghost'>
-          <VStack>
-            <IoShirtSharp />
-            <Text>Shirts</Text>
-          </VStack>
-        </Button>
-        <IconButton icon={IoShirtSharp}></IconButton> */}
-
-        <Button onClick={() => ChangeItems("shirts")} colorScheme={index === 1 ? "green" :  "gray"}>Shirts</Button>
-        {/* {index === 1 ? <CheckIcon /> : null} */}
-        <Button onClick={() => ChangeItems("sweatshirts")} colorScheme={index === 2 ? "green" :  "gray"}>Sweatshirts</Button>
-        <Button onClick={() => ChangeItems("activewear")} colorScheme={index === 3 ? "green" :  "gray"}>Activewear</Button>
-        <Button onClick={() => ChangeItems("polos")} colorScheme={index === 4 ? "green" :  "gray"}>Polos</Button>
-        <Button onClick={() => ChangeItems("all")} colorScheme={index === 0 ? "green" :  "gray"}>Top</Button>
-      </HStack>
-      <Box textAlign="center" fontSize="xl">
-        <Items url={url} />
-      </Box>
-    </ChakraProvider>
+    <FirestoreProvider sdk={firestoreInstance}>
+      <ChakraProvider theme={theme}>
+        <Header />
+        <HStack justify={"center"}>
+          <Button onClick={() => ChangeItems("shirts")} colorScheme={index === 1 ? "green" :  "gray"}>Shirts</Button>
+          {/* {index === 1 ? <CheckIcon /> : null} */}
+          <Button onClick={() => ChangeItems("sweatshirts")} colorScheme={index === 2 ? "green" :  "gray"}>Sweatshirts</Button>
+          <Button onClick={() => ChangeItems("activewear")} colorScheme={index === 3 ? "green" :  "gray"}>Activewear</Button>
+          <Button onClick={() => ChangeItems("polos")} colorScheme={index === 4 ? "green" :  "gray"}>Polos</Button>
+          <Button onClick={() => ChangeItems("all")} colorScheme={index === 0 ? "green" :  "gray"}>Top</Button>
+        </HStack>
+        <Box textAlign="center" fontSize="xl">
+          <Items url={url} />
+        </Box>
+      </ChakraProvider>
+    </FirestoreProvider>
   );
 }
 
