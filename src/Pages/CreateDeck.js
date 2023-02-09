@@ -27,13 +27,16 @@ import {
   IconButton,
   Stack,
   CardFooter,
+  FormControl,
+  FormErrorMessage
 } from '@chakra-ui/react';
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { FirestoreProvider, useFirestore, useFirebaseApp } from 'reactfire';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { doc, getFirestore, namedQuery, setDoc } from 'firebase/firestore';
 import { IoShirtOutline, IoShirtSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router';
+import { Field, Form, Formik } from 'formik';
 
 const trademarkSymbol = '®';
 
@@ -66,14 +69,15 @@ function DrawerExample() {
     setTempItems(items)
   }
 
-  async function createDeck() {
+  async function createDeck(name) {
     const db = getFirestore();
-    console.log("Creating deck")
-    await setDoc(doc(db, "decks", "mark2"), {
-      name: "Hello World",
-      date: "2021-09-01",
+
+    await setDoc(doc(db, "decks", name), {
+      name: name,
+      date: new Date().toLocaleDateString(),
       products: items
     });
+    window.open(`/view/${name}`, "_blank")
   }
 
   /* 
@@ -101,33 +105,54 @@ function DrawerExample() {
           <DrawerBody>
             <Stack spacing='24px'>
               <Box>
-                <FormLabel htmlFor='name'>Name</FormLabel>
-                <Input
-                  ref={firstField}
-                  id='name'
-                  placeholder='Please name your deck'
-                />
-              </Box>
-              {tempItems.map(item => (
-                <Box align="center" justify="center">
-                  <HStack align={"left"}><Text>{item.name}</Text> <Spacer /><IconButton size="xs" colorScheme="red" icon={<CloseIcon />} onClick={() => removeItem(item.name)}/></HStack>
-                  <Image src={item.image} />
-                </Box>
-              ))}
-
-              <Box>
+                <Formik
+                  initialValues={{ name: '' }}
+                  onSubmit={(values, actions) => {
+                    createDeck(values.name)
+                    setTimeout(() => {
+                      alert(JSON.stringify(values, null, 2));
+                      actions.setSubmitting(false);
+                    }, 1000);
+                  }}
+                >
+                  {props => (
+                    <Form>
+                      <Field name="name">
+                        {({ field, form }) => (
+                          <FormControl isInvalid={form.errors.name && form.touched.name}>
+                            <FormLabel>Deck Name</FormLabel>
+                            <Input {...field} id="name" placeholder="Enter Name" />
+                            <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      {tempItems.map(item => (
+                        <Box align="center" justify="center" mt="10">
+                          <HStack align={"left"}><Text>{item.name}</Text> <Spacer /><IconButton size="xs" colorScheme="red" icon={<CloseIcon />} onClick={() => removeItem(item.name)}/></HStack>
+                          <Image src={item.image} />
+                        </Box>
+                      ))}
+                      <DrawerFooter borderTopWidth='1px' mt={4}>
+                      <Button mt={4} colorScheme="green" isLoading={props.isSubmitting} type="submit">
+                        Submit
+                      </Button>
+                      </DrawerFooter>
+                    </Form>
+                  )}
+                </Formik>
+              {/* <Box>
                 <FormLabel htmlFor='desc'>Add notes</FormLabel>
                 <Textarea id='desc' />
+              </Box> */}
               </Box>
             </Stack>
           </DrawerBody>
-
-          <DrawerFooter borderTopWidth='1px'>
+          {/* <DrawerFooter borderTopWidth='1px'>
             <Button variant='outline' mr={3} onClick={onClose}>
               Continue Sourcing
             </Button>
             <Button colorScheme='green' onClick={() => createDeck()}>Create</Button>
-          </DrawerFooter>
+          </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
     </>
