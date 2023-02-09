@@ -47,12 +47,13 @@ const Product = (product) => {
   console.log("Product", product)
 
   return (
-    <Card h="600" mt="20" variant={"outline"}>
+    <Card h="400" mt="20" variant={"outline"}>
       <CardHeader>
         <Heading>{product.product.name}</Heading>
       </CardHeader>
       <CardBody>
         <HStack align="center" justify={"space-between"}>
+          <Spacer />
           <Image src={product.product.image} />
           <Spacer />
           <VStack>

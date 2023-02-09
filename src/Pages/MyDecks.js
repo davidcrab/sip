@@ -3,7 +3,6 @@ import {
   ChakraProvider,
   Box,
   Text,
-  Link,
   VStack,
   Code,
   Grid,
@@ -43,15 +42,19 @@ import {
   Th,
   Tbody,
   Td,
+  Link
 } from '@chakra-ui/react';
 import Draggable,  {DraggableCore}  from 'react-draggable'; // Both at the same time
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { FirestoreProvider, useFirestoreCollectionData, useFirestore, useFirebaseApp } from 'reactfire';
 import { doc, getFirestore, query, collection, orderBy } from 'firebase/firestore';
+import { useNavigate } from 'react-router';
 
 function MyDecks() {
  const firestoreInstance = getFirestore(useFirebaseApp());
+ const navigate = useNavigate()
+
  const decksquery = query(
     collection(firestoreInstance, "decks"),
     orderBy("name", "asc")
@@ -66,17 +69,45 @@ function MyDecks() {
     )
   }
 
+  const onClick = (id) => {
+    console.log("Clicked on " + id)
+    navigate(`/view/` + id)
+  }
+
   const deckCards = decks.map(deck => (
-    <Button m="10">{deck.name}</Button>
+    <Card>
+      <CardHeader>
+        <Heading size="md">{deck.name}</Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{deck.date}</Text>
+      </CardBody>
+      <CardFooter>
+        <Button size="lg" colorScheme='green' variant='outline'>Edit</Button>
+        <Spacer />
+        {/* <Button onClick={() => onClick(deck.id)}>View</Button> */}
+        <Button size="lg" colorScheme='green'><Link target="_blank" href={"/view/" + deck.id}>View</Link></Button>
+      </CardFooter>
+    </Card>
   ))
+
+  const onCreate = () => {
+    navigate("/create")
+  }
 
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
         <Box textAlign="center" fontSize="xl">
-          <Heading>My Decks</Heading>
+          <HStack ml="10" mr="10" mt="10">
+            <Heading>My Decks</Heading>
+            <Spacer />
+            <Button onClick={onCreate}>Create Deck</Button>
+          </HStack>
           <Divider mt="10" mb="20"/>
-          {deckCards}
+          <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
+            {deckCards}
+          </SimpleGrid>
         </Box>
       </ChakraProvider>
     </FirestoreProvider>

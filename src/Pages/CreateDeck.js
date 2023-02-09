@@ -33,6 +33,7 @@ import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { FirestoreProvider, useFirestore, useFirebaseApp } from 'reactfire';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { IoShirtOutline, IoShirtSharp } from "react-icons/io5";
+import { useNavigate } from 'react-router';
 
 const trademarkSymbol = '®';
 
@@ -49,6 +50,11 @@ function DrawerExample() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const firstField = React.useRef()
   const [ tempItems, setTempItems ] = React.useState(items)
+  const navigate = useNavigate()
+
+  const onClick = () => {
+    navigate(`/`)
+  }
 
   console.log("Items: ", items)
   if (tempItems.length !== items.length) {
@@ -63,7 +69,7 @@ function DrawerExample() {
   async function createDeck() {
     const db = getFirestore();
     console.log("Creating deck")
-    await setDoc(doc(db, "decks", "mark1"), {
+    await setDoc(doc(db, "decks", "mark2"), {
       name: "Hello World",
       date: "2021-09-01",
       products: items
@@ -75,6 +81,7 @@ function DrawerExample() {
   */
   return (
     <>
+      <Button onClick={onClick}>My Decks</Button>
       <Button leftIcon={<HamburgerIcon />} colorScheme='green' variant="outline" onClick={onOpen}>
         My Items
       </Button>
@@ -89,9 +96,8 @@ function DrawerExample() {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth='1px'>
-            Request Quote
+            New Deck
           </DrawerHeader>
-
           <DrawerBody>
             <Stack spacing='24px'>
               <Box>
@@ -99,12 +105,7 @@ function DrawerExample() {
                 <Input
                   ref={firstField}
                   id='name'
-                  placeholder='Please enter full name'
-                />
-                <FormLabel htmlFor='email'>Email</FormLabel>
-                <Input
-                  id='email'
-                  placeholder='Please enter your email'
+                  placeholder='Please name your deck'
                 />
               </Box>
               {tempItems.map(item => (
@@ -123,9 +124,9 @@ function DrawerExample() {
 
           <DrawerFooter borderTopWidth='1px'>
             <Button variant='outline' mr={3} onClick={onClose}>
-              Continue Browsing
+              Continue Sourcing
             </Button>
-            <Button colorScheme='green' onClick={() => createDeck()}>Send Request</Button>
+            <Button colorScheme='green' onClick={() => createDeck()}>Create</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -154,7 +155,14 @@ const Items = (url) => {
       price: price,
       quantity: "100"
     }]
-    let descriptions = [description]
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(description, 'text/html');
+    console.log(htmlDoc)
+    let bulletPoints = htmlDoc.getElementsByTagName('li')
+    let descriptions = []
+    for (let point of bulletPoints) {
+      descriptions.push(point.innerHTML)
+    }
 
     items.push({name, image, pricing, descriptions})
 
