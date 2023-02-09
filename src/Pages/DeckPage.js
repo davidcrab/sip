@@ -16,12 +16,15 @@ import {
   Tr,
   Th,
   Td,
-  TableContainer
+  TableContainer,
+  ChakraProvider,
+  theme
 } from "@chakra-ui/react";
 import React from "react";
 import ExampleProductImage from "../unnamed.jpg";
 import { doc, getFirestore } from 'firebase/firestore';
 import { FirestoreProvider, useFirestoreDocData, useFirestore, useFirebaseApp } from 'reactfire';
+import { Link, useParams } from "react-router-dom";
 
 
 const DeckHeader = (data) => {
@@ -50,7 +53,7 @@ const Product = (product) => {
       </CardHeader>
       <CardBody>
         <HStack align="center" justify={"space-between"}>
-          <Image src={ExampleProductImage} />
+          <Image src={product.product.image} />
           <Spacer />
           <VStack>
             <Heading>About</Heading>
@@ -90,9 +93,10 @@ const Product = (product) => {
 }
 
 const SalesDeck = () => {
+  const { id: projectId } = useParams();
 
   // easily access the Firestore library
-  const burritoRef = doc(useFirestore(), 'decks', 'firstdeck');
+  const burritoRef = doc(useFirestore(), 'decks', projectId);
 
   // subscribe to a document for realtime updates. just one line!
   const { status, data } = useFirestoreDocData(burritoRef);
@@ -119,8 +123,12 @@ const DeckPage = () => {
 
   return (
     <FirestoreProvider sdk={firestoreInstance}>
-        <SalesDeck />
+      <ChakraProvider theme={theme}>
+          <SalesDeck />
+      </ChakraProvider>
     </FirestoreProvider>
 
   );
 }
+
+export default DeckPage;

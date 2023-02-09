@@ -44,16 +44,13 @@ import {
   Tbody,
   Td,
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
 import Draggable,  {DraggableCore}  from 'react-draggable'; // Both at the same time
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
-import ExampleProductImage from './unnamed.jpg'
 import { FirestoreProvider, useFirestoreCollectionData, useFirestore, useFirebaseApp } from 'reactfire';
 import { doc, getFirestore, query, collection, orderBy } from 'firebase/firestore';
 
-function App() {
+function MyDecks() {
  const firestoreInstance = getFirestore(useFirebaseApp());
  const decksquery = query(
     collection(firestoreInstance, "decks"),
@@ -86,3 +83,5 @@ function App() {
 
   );
 }
+
+export default MyDecks;
