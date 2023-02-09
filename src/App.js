@@ -51,12 +51,10 @@ function DrawerExample() {
   const firstField = React.useRef()
   const [ tempItems, setTempItems ] = React.useState(items)
 
-
+  console.log("Items: ", items)
   if (tempItems.length !== items.length) {
     setTempItems(items)
   }
-  console.log(tempItems)
-  console.log(items)
 
   const removeItem = (name) => {
     items = items.filter(item => item.name !== name)
@@ -66,25 +64,10 @@ function DrawerExample() {
   async function createDeck() {
     const db = getFirestore();
     console.log("Creating deck")
-    await setDoc(doc(db, "decks", "test2"), {
-      name: "Test Deck 2",
+    await setDoc(doc(db, "decks", "test"), {
+      name: "Test Deck 3",
       date: "2021-09-01",
-      products: [
-        {
-          name: "Test Product 1",
-          descriptions: [
-            "Test Description 1",
-            "Test Description 2"
-          ],
-          image: "https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?as=&categorySearchTerm=&screenSize=large",
-          pricing: [
-            {
-              price: 10,
-              quantity: 10
-            },
-          ],
-        },
-      ],
+      products: items
     });
   }
 
@@ -164,9 +147,17 @@ const Items = (url) => {
 
   console.log(data)
 
-  const AddItem = (name, image) => {
+  const AddItem = (name, image, price, description) => {
+    let pricing = { 
+      price: price,
+      quantity: "100"
+    }
+    if (pricing.price === undefined) {
+      pricing.price = "0.00"
+    }
+    let descriptions = [description]
 
-    items.push({name, image})
+    items.push({name, image, pricing, descriptions})
 
     toast({
       title: 'Item added.',
@@ -190,7 +181,7 @@ const Items = (url) => {
             <CardBody key={product.name.replace(/&#174;/g, trademarkSymbol)} align="center" justify="center">
               <HStack align="right" justify="right">
                 <Image src={product.images[0].url} />
-                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, ""), product.images[0].url)}></IconButton>
+                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, ""), product.images[0].url, product.displayPriceText, product.description)}></IconButton>
               </HStack>
               {product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, "")}
             </CardBody>
