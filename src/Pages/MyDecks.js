@@ -71,8 +71,9 @@ function MyDecks() {
 
   const onClick = (id) => {
     console.log("Clicked on " + id)
-    navigate(`/view/` + id)
+    navigate(`/edit/` + id)
   }
+
 
   const deckCards = decks.map(deck => (
     <Card>
@@ -83,10 +84,12 @@ function MyDecks() {
         <Text>{deck.date}</Text>
       </CardBody>
       <CardFooter>
-        <Button size="lg" colorScheme='green' variant='outline'>Edit</Button>
+        <Button size="lg" colorScheme='green' variant='outline' onClick={() => onClick(deck.id)}>Edit</Button>
         <Spacer />
         {/* <Button onClick={() => onClick(deck.id)}>View</Button> */}
-        <Button size="lg" colorScheme='green'><Link target="_blank" href={"/view/" + deck.id}>View</Link></Button>
+        <Link target="_blank" href={"/view/" + deck.id}>
+          <Button size="lg" colorScheme='green'>View</Button>
+        </Link>
       </CardFooter>
     </Card>
   ))

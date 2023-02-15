@@ -32,8 +32,8 @@ import {
 } from '@chakra-ui/react';
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
-import { FirestoreProvider, useFirestore, useFirebaseApp } from 'reactfire';
-import { doc, getFirestore, namedQuery, setDoc } from 'firebase/firestore';
+import { FirestoreProvider, useFirestore, useFirebaseApp, useFirestoreCollectionData } from 'reactfire';
+import { doc, getFirestore, namedQuery, setDoc, query, collection  } from 'firebase/firestore';
 import { IoShirtOutline, IoShirtSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router';
 import { Field, Form, Formik } from 'formik';
@@ -56,7 +56,7 @@ function DrawerExample() {
   const navigate = useNavigate()
 
   const onClick = () => {
-    navigate(`/`)
+    navigate(`/demo`)
   }
 
   console.log("Items: ", items)
@@ -71,11 +71,32 @@ function DrawerExample() {
 
   async function createDeck(name) {
     const db = getFirestore();
+    // i want to map an array of objects into a map of objects
+    // const products = items.map(item => {
+    //   return {
+    //     name: item.name,
+    //     price: item.price,
+    //     image: item.image,
+    //     descriptions: item.descriptions
+    //   }
+    // })
+    let products = {}
+    items.forEach((item, index) => {
+      products[index] = {
+        name: item.name,
+        pricing: item.pricing,
+        image: item.image,
+        descriptions: item.descriptions
+      }
+    })
+    
+    console.log("products", products)
+
 
     await setDoc(doc(db, "decks", name), {
       name: name,
       date: new Date().toLocaleDateString(),
-      products: items
+      products: products
     });
     window.open(`/view/${name}`, "_blank")
   }
@@ -159,35 +180,48 @@ function DrawerExample() {
   )
 }
 
-const Items = (url) => {
-  console.log(url)
-  console.log(temp_url)
-  const { data, error } = useSWR(url.url, fetcher);
+const Items = (products) => {
+
+
   const toast = useToast()
-  if (error) {
-    console.log(error)
-    return <div>failed to load</div>
-  }
-  if (!data) return <div>loading...</div>
 
-  console.log(data)
+  console.log(products)
 
-  const AddItem = (name, image, price, description) => {
+  const AddItem = (name, image, price, descriptions) => {
     if (price === undefined || price === null) {
       price = "0.00"
     }
-    let pricing = [{ 
-      price: price,
-      quantity: "100"
-    }]
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(description, 'text/html');
-    console.log(htmlDoc)
-    let bulletPoints = htmlDoc.getElementsByTagName('li')
-    let descriptions = []
-    for (let point of bulletPoints) {
-      descriptions.push(point.innerHTML)
+    let pricing = 
+    {
+      "0": {
+        price: price,
+        quantity: "0"
+      },
+      "1": {
+        price: "",
+        quantity: ""
+      },
+      "2": {
+        price: "",
+        quantity: ""
+      },
+      "3": {
+        price: "",
+        quantity: ""
+      },
     }
+    // let pricing2 = {
+    //   quantity: price,
+    //   "0"
+    // }
+    // const parser = new DOMParser();
+    // const htmlDoc = parser.parseFromString(description, 'text/html');
+    // console.log(htmlDoc)
+    // let bulletPoints = htmlDoc.getElementsByTagName('li')
+    // let descriptions = []
+    // for (let point of bulletPoints) {
+    //   descriptions.push(point.innerHTML)
+    // }
 
     items.push({name, image, pricing, descriptions})
 
@@ -208,14 +242,16 @@ const Items = (url) => {
   */
   return (
     <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
-        {data.results.map(product => (
-          <Card maxW='sm' align="center" justify="center">
-            <CardBody key={product.name.replace(/&#174;/g, trademarkSymbol)} align="center" justify="center">
+        {products.products.map(product => (
+          <Card maxW='lg' align="center" justify="center">
+            <CardBody key={product.name} align="center" justify="center">
               <HStack align="right" justify="right">
-                <Image src={product.images[0].url} />
-                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, ""), product.images[0].url, product.displayPriceText, product.description)}></IconButton>
+                <Image src={product.image_url} />
+                {/* <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, ""), product.images[0].url, product.displayPriceText, product.description)}></IconButton> */}
+                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name, product.image_url, product.lowest_price, product.descriptions)}></IconButton>
               </HStack>
-              {product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, "")}
+              <Heading size="md">{product.name}</Heading>
+              <Text size="md">${product.lowest_price}</Text>
             </CardBody>
             <CardFooter>
             </CardFooter>
@@ -239,9 +275,23 @@ const Header = () => {
 
 function CreateDeck() {
   const firestoreInstance = getFirestore(useFirebaseApp());
-
   const [ url, setUrl ] = React.useState(temp_url)
   const [ index, setIndex ] = React.useState(0)
+
+
+  const productQuery = query(
+    collection(firestoreInstance, "products"),
+    // TODO: pagination... but how do we even handle this w/ respect to the deals display...
+  )
+  const { status: productStatus, data: product } = useFirestoreCollectionData(productQuery, { idField: "id" })
+
+  if(productStatus === "loading") {
+    // TODO: add skeleton display instead of this text
+    return (
+      <Heading>Loading ...</Heading>
+    )
+  }
+
 
   const ChangeItems = (e) => {
 
@@ -275,7 +325,7 @@ function CreateDeck() {
           <Button onClick={() => ChangeItems("all")} colorScheme={index === 0 ? "green" :  "gray"}>Top</Button>
         </HStack>
         <Box textAlign="center" fontSize="xl">
-          <Items url={url} />
+          <Items products={product} />
         </Box>
       </ChakraProvider>
     </FirestoreProvider>

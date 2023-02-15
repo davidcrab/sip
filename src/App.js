@@ -6,6 +6,7 @@ import MyDecks from './Pages/MyDecks';
 import CreateDeck from './Pages/CreateDeck';
 import DeckPage from './Pages/DeckPage';
 import Landing from './Pages/Landing';
+import EditDeck from './Pages/EditDeck';
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ const AppInner = () => {
           <Route path="/demo" element={<MyDecks />} />
           <Route path="/view" element={<DeckPage />} />
           <Route path="/create" element={<CreateDeck />} />
+          <Route path="/edit/:id" element={<EditDeck />} />
           <Route path="/view/:id" element={<DeckPage />} />
         </Routes>
       </BrowserRouter>
