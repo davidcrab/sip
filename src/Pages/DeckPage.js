@@ -68,7 +68,7 @@ const Product = (product) => {
   console.log("Product", product)
 
   return (
-    <Card h="400" m="10" variant={"elevated"}>
+    <Card h="450" m="10" variant={"elevated"}>
       {/* <CardHeader>
         <Heading>{product.product.name}</Heading>
       </CardHeader> */}
