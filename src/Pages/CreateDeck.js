@@ -89,6 +89,7 @@ function DrawerExample() {
         image: item.image,
         descriptions: item.descriptions,
         product_notes: item.product_notes,
+        lowest_price: item.lowest_price,
       }
     })
     
@@ -100,7 +101,7 @@ function DrawerExample() {
       date: new Date().toLocaleDateString(),
       products: products
     });
-    window.open(`/view/${name}`, "_blank")
+    window.open(`/edit/${name}`, "_blank")
   }
 
   /* 
@@ -133,9 +134,9 @@ function DrawerExample() {
                   onSubmit={(values, actions) => {
                     createDeck(values.name)
                     setTimeout(() => {
-                      alert(JSON.stringify(values, null, 2));
+                      // alert(JSON.stringify(values, null, 2));
                       actions.setSubmitting(false);
-                    }, 1000);
+                    }, 500);
                   }}
                 >
                   {props => (
@@ -189,7 +190,7 @@ const Items = (products) => {
 
   console.log(products)
 
-  const AddItem = (name, image, price, descriptions, product_notes) => {
+  const AddItem = (name, image, price, descriptions, product_notes, lowest_price) => {
     if (price === undefined || price === null) {
       price = "0.00"
     }
@@ -197,31 +198,18 @@ const Items = (products) => {
     {
       "0": {
         price: price,
-        quantity: "0"
+        quantity: "-"
       },
       "1": {
-        price: "",
-        quantity: ""
+        price: "-",
+        quantity: "-"
       },
       "2": {
-        price: "",
-        quantity: ""
+        price: "-",
+        quantity: "-"
       }
     }
-    // let pricing2 = {
-    //   quantity: price,
-    //   "0"
-    // }
-    // const parser = new DOMParser();
-    // const htmlDoc = parser.parseFromString(description, 'text/html');
-    // console.log(htmlDoc)
-    // let bulletPoints = htmlDoc.getElementsByTagName('li')
-    // let descriptions = []
-    // for (let point of bulletPoints) {
-    //   descriptions.push(point.innerHTML)
-    // }
-
-    items.push({name, image, pricing, descriptions, product_notes})
+    items.push({name, image, pricing, descriptions, product_notes, lowest_price})
 
     toast({
       title: 'Item added.',
@@ -246,7 +234,7 @@ const Items = (products) => {
               <HStack align="right" justify="right">
                 <Image src={product.image_url} />
                 {/* <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, ""), product.images[0].url, product.displayPriceText, product.description)}></IconButton> */}
-                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name, product.image_url, product.lowest_price, product.descriptions, product.product_notes)}></IconButton>
+                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name, product.image_url, product.lowest_price, product.descriptions, product.product_notes, product.lowest_price)}></IconButton>
               </HStack>
               <Heading size="md">{product.name}</Heading>
               <Text size="md">${product.lowest_price}</Text>
