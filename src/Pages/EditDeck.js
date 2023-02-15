@@ -34,7 +34,8 @@ import {
   VStack,
   Spacer,
   Button,
-  Link
+  Link,
+  Divider
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreDocData } from "reactfire";
@@ -219,8 +220,14 @@ const EditProduct = ({ product, productIndex }) => {
             </GridItem>
           </Grid>
       </CardBody>
-      <CardFooter>
-
+      <CardFooter mt="10">
+        <VStack textAlign={"start"}>
+        <Divider w="full" />
+          <Heading size={"sm"}>Notes</Heading>
+          {product.product_notes.map(note => (
+            <Text w="full">{note}</Text>
+          ))}
+        </VStack>
       </CardFooter>
     </Card>
   )

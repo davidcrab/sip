@@ -86,7 +86,8 @@ function DrawerExample() {
         name: item.name,
         pricing: item.pricing,
         image: item.image,
-        descriptions: item.descriptions
+        descriptions: item.descriptions,
+        product_notes: item.product_notes,
       }
     })
     
@@ -187,7 +188,7 @@ const Items = (products) => {
 
   console.log(products)
 
-  const AddItem = (name, image, price, descriptions) => {
+  const AddItem = (name, image, price, descriptions, product_notes) => {
     if (price === undefined || price === null) {
       price = "0.00"
     }
@@ -204,11 +205,7 @@ const Items = (products) => {
       "2": {
         price: "",
         quantity: ""
-      },
-      "3": {
-        price: "",
-        quantity: ""
-      },
+      }
     }
     // let pricing2 = {
     //   quantity: price,
@@ -223,7 +220,7 @@ const Items = (products) => {
     //   descriptions.push(point.innerHTML)
     // }
 
-    items.push({name, image, pricing, descriptions})
+    items.push({name, image, pricing, descriptions, product_notes})
 
     toast({
       title: 'Item added.',
@@ -248,7 +245,7 @@ const Items = (products) => {
               <HStack align="right" justify="right">
                 <Image src={product.image_url} />
                 {/* <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name.replace(/<sup>&#174;<\/sup>/g, trademarkSymbol).replace(/<sup>&#153;<\/sup>/g, "").replace(/&#153;/g, ""), product.images[0].url, product.displayPriceText, product.description)}></IconButton> */}
-                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name, product.image_url, product.lowest_price, product.descriptions)}></IconButton>
+                <IconButton colorScheme="green" size="xs" icon={<AddIcon />} onClick={() => AddItem(product.name, product.image_url, product.lowest_price, product.descriptions, product.product_notes)}></IconButton>
               </HStack>
               <Heading size="md">{product.name}</Heading>
               <Text size="md">${product.lowest_price}</Text>
