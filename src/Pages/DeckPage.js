@@ -33,7 +33,7 @@ import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 const DeckHeader = (data) => {
   console.log("Header", data)
   return (
-    <Box h="200" m="0">
+    <Box h="150" m="0">
       <VStack justify="center" m="0">
         <HStack w={"95%"} m="5">
           <Heading size="3xl">{data.data}</Heading>
@@ -68,7 +68,7 @@ const Product = (product) => {
   console.log("Product", product)
 
   return (
-    <Card h="400" m="10" variant={"outline"}>
+    <Card h="400" m="10" variant={"elevated"}>
       {/* <CardHeader>
         <Heading>{product.product.name}</Heading>
       </CardHeader> */}
@@ -140,7 +140,7 @@ const SalesDeck = () => {
   console.log(data)
 
   return (
-    <Box margin="0">
+    <Box margin="0" bg="gray.50">
       <DeckHeader data={data.name} date={data.date} />
       {Object.values(data.products).map((productMap, index) => (
         <Product product={productMap} key={index} />
