@@ -28,7 +28,8 @@ import {
   Stack,
   CardFooter,
   FormControl,
-  FormErrorMessage
+  FormErrorMessage,
+  Link
 } from '@chakra-ui/react';
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
@@ -238,9 +239,9 @@ const Items = (products) => {
   I want to map t
   */
   return (
-    <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
+    <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(250px, 1fr))' margin="20" mt="10">
         {products.products.map(product => (
-          <Card maxW='lg' align="center" justify="center">
+          <Card align="center" justify="center">
             <CardBody key={product.name} align="center" justify="center">
               <HStack align="right" justify="right">
                 <Image src={product.image_url} />
@@ -251,6 +252,7 @@ const Items = (products) => {
               <Text size="md">${product.lowest_price}</Text>
             </CardBody>
             <CardFooter>
+            <Link href={product.url} isExternal>View Product Site</Link>
             </CardFooter>
           </Card>
         ))}
@@ -313,14 +315,13 @@ function CreateDeck() {
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
         <Header />
-        <HStack justify={"center"}>
+        {/* <HStack justify={"center"}>
           <Button onClick={() => ChangeItems("shirts")} colorScheme={index === 1 ? "green" :  "gray"}>Shirts</Button>
-          {/* {index === 1 ? <CheckIcon /> : null} */}
           <Button onClick={() => ChangeItems("sweatshirts")} colorScheme={index === 2 ? "green" :  "gray"}>Sweatshirts</Button>
           <Button onClick={() => ChangeItems("activewear")} colorScheme={index === 3 ? "green" :  "gray"}>Activewear</Button>
           <Button onClick={() => ChangeItems("polos")} colorScheme={index === 4 ? "green" :  "gray"}>Polos</Button>
           <Button onClick={() => ChangeItems("all")} colorScheme={index === 0 ? "green" :  "gray"}>Top</Button>
-        </HStack>
+        </HStack> */}
         <Box textAlign="center" fontSize="xl">
           <Items products={product} />
         </Box>
