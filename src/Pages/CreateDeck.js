@@ -38,6 +38,9 @@ import { doc, getFirestore, namedQuery, setDoc, query, collection  } from 'fireb
 import { IoShirtOutline, IoShirtSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router';
 import { Field, Form, Formik } from 'formik';
+import TypesenseInstantSearchAdapter from "typesense-instantsearch-adapter";
+import { InstantSearch, SearchBox, Hits, Stats } from "react-instantsearch-dom"
+
 
 const trademarkSymbol = '®';
 
@@ -48,6 +51,35 @@ const temp_url = "https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.
 
 /* I need to store items in local storage !!!! */
 let items = []
+
+const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
+  server: {
+    apiKey: "xMWj0zSONVTnMzxmfGLsAd5yz1cZiHQ6", // Be sure to use an API key that only allows search operations
+    nodes: [
+      {
+        host: "mke80ni3q2z1f5bap-1.a1.typesense.net",
+        port: "443",
+        path: "", // Optional. Example: If you have your typesense mounted in localhost:8108/typesense, path should be equal to '/typesense'
+        protocol: "https",
+      },
+    ],
+    cacheSearchResultsForSeconds: 2 * 60, // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
+  },
+  // The following parameters are directly passed to Typesense's search API endpoint.
+  //  So you can pass any parameters supported by the search endpoint below.
+  //  query_by is required.
+  additionalSearchParameters: {
+    query_by: "name",
+  },
+});
+const searchClient = typesenseInstantsearchAdapter.searchClient;
+
+// const App = () => (
+//   <InstantSearch indexName="products" searchClient={searchClient}>
+//     <SearchBox />
+//     <Hits />
+//   </InstantSearch>
+// );
 
 
 function DrawerExample() {
@@ -279,30 +311,21 @@ function CreateDeck() {
     )
   }
 
+  const Hit = ({ hit }) => (
+    <p>
+      {hit.name} - {hit.description}
+    </p>
+  )
 
-  const ChangeItems = (e) => {
-
-    if (e === "shirts") {
-      setUrl("https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?screenSize=large&sort=relevance&text=:relevance:category:tshirts")
-      setIndex(1)
-    } else if (e === "sweatshirts") {
-      setUrl("https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?screenSize=large&sort=relevance&text=:relevance:category:sweatshirtsfleece")
-      setIndex(2)
-    } else if (e === "activewear") {
-      setUrl("https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?screenSize=large&sort=relevance&text=:relevance:category:activewear")
-      setIndex(3)
-    } else if (e === "polos") {
-      setUrl("https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?screenSize=large&sort=relevance&text=:relevance:category:polosknits")
-      setIndex(4)
-    } else {
-      setUrl("https://www.sanmar.com/Brands/Gildan/c/bra-gildan/getProducts.json?as=&categorySearchTerm=&screenSize=large")
-      setIndex(0)
-    }
-  }
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
         <Header />
+        <InstantSearch searchClient={searchClient} indexName="products">
+          <SearchBox />
+          <Stats />
+          <Hits hitComponent={Hit} />
+        </InstantSearch>
         {/* <HStack justify={"center"}>
           <Button onClick={() => ChangeItems("shirts")} colorScheme={index === 1 ? "green" :  "gray"}>Shirts</Button>
           <Button onClick={() => ChangeItems("sweatshirts")} colorScheme={index === 2 ? "green" :  "gray"}>Sweatshirts</Button>
