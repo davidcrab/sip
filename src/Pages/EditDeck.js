@@ -23,20 +23,13 @@ import {
   Input,
   EditableInput,
   useColorModeValue,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
   EditableTextarea,
   VStack,
   Spacer,
   Button,
   Link,
   Divider,
-  TableCaption
+  Textarea,
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreDocData } from "reactfire";
@@ -58,8 +51,6 @@ for nest fields, i need the field name, the nest index, and the nest field and t
  name = field
 
 */
-
-
 
 async function UpdateName(field, value, deckId) {
   /*
@@ -146,7 +137,7 @@ const EditField = ({ field, value, productIndex, deckId }) => {
             }}
           />
         </Tooltip>
-        <Input py={2} px={4} as={EditableInput} size='lg'/>
+        <Input py={2} px={4} as={EditableTextarea} size='lg'/>
         <EditableControls />
       </Editable>
   );
@@ -168,26 +159,12 @@ const EditProduct = ({ product, productIndex, deckId }) => {
             <Spacer />
             <VStack>
               <Heading size={"sm"}>Description</Heading>
-              <Editable defaultValue={product.descriptions}>
-                <EditablePreview />
-                <EditableTextarea/>
-              </Editable>
-              {/* <UnorderedList textAlign={"left"} spacing={1}>
-                {product.descriptions.map(description => (
-                  <ListItem>
-                    <Editable defaultValue={description}>
-                      <EditablePreview />
-                      <EditableTextarea/>
-                    </Editable>
-                  </ListItem>
-                ))}
-              </UnorderedList> */}
+              <EditField field="descriptions" value={product.descriptions} productIndex={product.id} deckId={deckId}/>
             </VStack>
             <Spacer />
             <VStack>
               <Heading size="sm">Price</Heading>
               <EditField field="pricing" value={product.pricing} productIndex={product.id} deckId={deckId}/>
-              {/* <AddPricing pricing={product.pricing} productIndex={product.id} deckId={deckId}/> */}
             </VStack>
           </HStack>
         </VStack>

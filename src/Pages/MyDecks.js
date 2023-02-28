@@ -103,9 +103,9 @@ function MyDecks() {
       <ChakraProvider theme={theme}>
         <Box textAlign="center" fontSize="xl">
           <HStack ml="10" mr="10" mt="10">
-            <Heading>My Decks</Heading>
+            <Heading>All Decks</Heading>
             <Spacer />
-            <Button onClick={onCreate}>Create Deck</Button>
+            {/* <Button onClick={onCreate}>Create Deck</Button> */}
           </HStack>
           <Divider mt="10" mb="20"/>
           <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">

@@ -2,7 +2,6 @@ import {
   Box,
   Card,
   CardBody,
-  CardHeader,
   Heading,
   HStack,
   Image,
@@ -10,17 +9,19 @@ import {
   UnorderedList,
   ListItem,
   VStack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
+  Text,
   ChakraProvider,
   theme,
   Button,
-  Stack
+  Stack,
+  Wrap, 
+  WrapItem,
+  Accordion,
+  AccordionItem,
+  AccordionIcon,
+  AccordionPanel,
+  AccordionButton,
+  Divider
 } from "@chakra-ui/react";
 import React from "react";
 import ExampleProductImage from "../unnamed.jpg";
@@ -33,20 +34,21 @@ import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 const DeckHeader = (data) => {
   console.log("Header", data)
   return (
-    <Box h="150" m="0">
+    <Box m="0" bg="gray.50">
       <VStack justify="center" m="0">
         <HStack w={"95%"} m="5">
-          <Heading size="3xl">{data.data}</Heading>
+          <Heading size="xl">{data.data}</Heading>
           <Spacer />
           <Stack direction='row' spacing={4}>
-            <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'>
+            {/* <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'>
               Email Ryan
             </Button>
             <Button leftIco={<PhoneIcon />} colorScheme='teal' variant='outline'>
               443-852-4722
-            </Button>
+            </Button> */}
           </Stack>
         </HStack>
+        <Divider />
       </VStack>
     </Box>
   )
@@ -64,59 +66,44 @@ const DeckFooter = (data) => {
 }
 
 const Product = (product) => {
-
-  console.log("Product", product)
+  const descriptions = product.product.descriptions.split('-')
+  descriptions.shift()
 
   return (
-    <Card h="450" m="10" variant={"elevated"}>
-      {/* <CardHeader>
-        <Heading>{product.product.name}</Heading>
-      </CardHeader> */}
-      <CardBody>
-        <HStack align="start">
-          <VStack>
-            <Heading>{product.product.name}</Heading>
-            <VStack pl="10">
-              <Spacer />
+    <Card maxW='400' minW="sm" minH="sm" variant={"elevated"}>
+      <CardBody align="center" w="full">
+        <Image
+          src={product.product.image}
+          alt='Product Name'
+          borderRadius='lg'
+          objectFit='cover'
+          h='200px'
+          align="center"
+        />
+        <Stack align="left" justify="left" textAlign="left" mt='6' spacing='3'>
+          <Heading size='md'>{product.product.name}</Heading>
+          <Accordion allowMultiple>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex='1' textAlign='left'>
+                    Description
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
               <UnorderedList spacing={3}>
-                {product.product.descriptions.map(description => (
-                  <ListItem><Heading size={"md"}>{description}</Heading></ListItem>
+                {descriptions.map(description => (
+                  <ListItem ml="4"><Text fontSize={"sm"}>{description}</Text></ListItem>
                 ))}
-              </UnorderedList>
-            </VStack>
-            <Spacer />
-            <VStack>
-              {/* <Heading size="md">Price</Heading> */}
-              <Spacer />
-              <TableContainer>
-                <Table variant='simple'>
-                  <Thead>
-                    <Tr>
-                      <Th>Quantity</Th>
-                      <Th isNumeric>Price</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                  {Object.values(product.product.pricing).map((price, index) => (
-                    <Tr>
-                      <Td>{price.quantity}</Td>
-                      <Td isNumeric>{price.price}</Td>
-                    </Tr>
-                  ))}
-                    {/* {product.product.pricing.map(price => (
-                    <Tr>
-                      <Td>{price.quantity}</Td>
-                      <Td isNumeric>{price.price}</Td>
-                    </Tr>
-                    ))} */}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-            </VStack>
-          </VStack>
-          <Spacer />
-          <Image src={product.product.image} />
-        </HStack>
+              </UnorderedList> 
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+          <Text color='blue.600' fontSize='2xl'>{product.product.pricing}</Text>
+
+        </Stack>
       </CardBody>
     </Card>
   )
@@ -133,24 +120,22 @@ const SalesDeck = () => {
 
   // easily check the loading status
   if (status === 'loading') {
-    return <p>Fetching burrito flavor...</p>;
+    return <p>Fetching products...</p>;
   }
 
   // map through the products 
   console.log(data)
 
   return (
-    <Box margin="0" bg="gray.50">
+    <Box margin="0" h="full">
       <DeckHeader data={data.name} date={data.date} />
-      {Object.values(data.products).map((productMap, index) => (
-        <Product product={productMap} key={index} />
-      ))}
-      {/* {Object.entries(data.products).map(([key, value]) => {
-        <Product product={value} />
-      })}
-      {data.products.map(product => (
-        <Product product={product} />
-       ))} */}
+      <Wrap spacing="30px" justify="center" align="center" p="10">
+        {Object.values(data.products).map((productMap, index) => (
+          <WrapItem>
+            <Product product={productMap} key={index} />
+          </WrapItem>
+        ))}
+      </Wrap>
        <DeckFooter date={data.date}/>
     </Box>
   )
@@ -162,7 +147,7 @@ const DeckPage = () => {
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
-          <SalesDeck />
+          <SalesDeck height="100%" />
       </ChakraProvider>
     </FirestoreProvider>
 
