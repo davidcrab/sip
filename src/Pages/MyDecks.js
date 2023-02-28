@@ -84,11 +84,11 @@ function MyDecks() {
         <Text>{deck.date}</Text>
       </CardBody>
       <CardFooter>
-        <Button size="lg" colorScheme='green' variant='outline' onClick={() => onClick(deck.id)}>Edit</Button>
+        <Button size="sm" colorScheme='green' variant='outline' onClick={() => onClick(deck.id)}>Edit</Button>
         <Spacer />
         {/* <Button onClick={() => onClick(deck.id)}>View</Button> */}
         <Link target="_blank" href={"/view/" + deck.id}>
-          <Button size="lg" colorScheme='green'>View</Button>
+          <Button size="sm" colorScheme='green'>View</Button>
         </Link>
       </CardFooter>
     </Card>
