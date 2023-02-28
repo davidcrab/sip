@@ -59,61 +59,6 @@ for nest fields, i need the field name, the nest index, and the nest field and t
 
 */
 
-const AddPricing = ({ pricing, productIndex, deckId }) => {
-  const db = getFirestore();
-  const docRef = doc(db, "decks", deckId);
-
-  const ChangePrice = async (event, priceIndex) => {
-    console.log(event)
-    let field = "products." + productIndex + ".pricing." + priceIndex + ".price"
-    await updateDoc(docRef, {
-      [field]: event
-    });
-  }
-
-  const ChangeQuantity = async (event, priceIndex) => {
-    console.log(event)
-    let field = "products." + productIndex + ".pricing." + priceIndex + ".quantity"
-    await updateDoc(docRef, {
-      [field]: event
-    });
-  }
-
-  return (
-    <Box>
-      <TableContainer>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>Quantity</Th>
-              <Th>Price</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {Object.values(pricing).map((price, index) => {
-              return (
-                <Tr>
-                  <Td>
-                    <Editable defaultValue={price.quantity} onSubmit={(event) => ChangeQuantity(event, index)}>
-                      <EditablePreview />
-                      <EditableInput />
-                    </Editable></Td>
-                  <Td>
-                    <Editable defaultValue={price.price} onSubmit={(event) => ChangePrice(event, index)}>
-                      <EditablePreview />
-                      <EditableInput />
-                    </Editable>
-                  </Td>
-                </Tr>
-              )
-            })}
-          </Tbody>
-        </Table>
-      </TableContainer>
-    </Box>
-  )
-
-}
 
 
 async function UpdateName(field, value, deckId) {
@@ -132,29 +77,19 @@ async function UpdateProductName(field, value, deckId, productIndex) {
   const db = getFirestore();
   const docRef = doc(db, "decks", deckId);
   // update this to map in the field so like 
-  let test = "products." + productIndex + ".name"
+  let test = "products." + productIndex + "." + field
   await updateDoc(docRef, {
     [test]: value,
   });
 }
 
 const EditField = ({ field, value, productIndex, deckId }) => {
-  /*
-    Update the document with the new value
-    
-  */
 
-    // To update age and favorite color:
-    /*
-    await updateDoc(frankDocRef, {
-      "age": 13,
-      "favorites.color": "Red"
-    });
-    */
   console.log()
   const testChange = (event) => {
     if (productIndex || productIndex === 0) {
       console.log(productIndex)
+      console.log("field", field)
       UpdateProductName(field, event, deckId, productIndex)
     } else {
       console.log(field)
@@ -233,7 +168,11 @@ const EditProduct = ({ product, productIndex, deckId }) => {
             <Spacer />
             <VStack>
               <Heading size={"sm"}>Description</Heading>
-              <UnorderedList textAlign={"left"} spacing={1}>
+              <Editable defaultValue={product.descriptions}>
+                <EditablePreview />
+                <EditableTextarea/>
+              </Editable>
+              {/* <UnorderedList textAlign={"left"} spacing={1}>
                 {product.descriptions.map(description => (
                   <ListItem>
                     <Editable defaultValue={description}>
@@ -242,12 +181,13 @@ const EditProduct = ({ product, productIndex, deckId }) => {
                     </Editable>
                   </ListItem>
                 ))}
-              </UnorderedList>
+              </UnorderedList> */}
             </VStack>
             <Spacer />
             <VStack>
-              <Heading size="sm">Vendor Lowest Price: {product.lowest_price}</Heading>
-              <AddPricing pricing={product.pricing} productIndex={product.id} deckId={deckId}/>
+              <Heading size="sm">Price</Heading>
+              <EditField field="pricing" value={product.pricing} productIndex={product.id} deckId={deckId}/>
+              {/* <AddPricing pricing={product.pricing} productIndex={product.id} deckId={deckId}/> */}
             </VStack>
           </HStack>
         </VStack>
