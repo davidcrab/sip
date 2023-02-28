@@ -224,7 +224,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
   return (
     <Card size="lg" minHeight="200px" m="10">
       <CardHeader>
-          <EditField field="name" value={product.name} productIndex={productIndex} deckId={deckId}/>
+          <EditField field="name" value={product.name} productIndex={product.id} deckId={deckId}/>
       </CardHeader>
       <CardBody minHeight="200px" pt="0">
         <VStack>
@@ -247,7 +247,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
             <Spacer />
             <VStack>
               <Heading size="sm">Vendor Lowest Price: {product.lowest_price}</Heading>
-              <AddPricing pricing={product.pricing} productIndex={productIndex} deckId={deckId}/>
+              <AddPricing pricing={product.pricing} productIndex={product.id} deckId={deckId}/>
             </VStack>
           </HStack>
         </VStack>
@@ -257,7 +257,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
         <VStack textAlign={"start"}>
         <Divider w="full" />
           <Heading size={"sm"}>Notes</Heading>
-          {product.product_notes.map(note => (
+          {product.notes.map(note => (
             <Text w="full">{note}</Text>
           ))}
         </VStack>
@@ -290,7 +290,7 @@ const Deck = () => {
           <Button colorScheme='gray'>View <ExternalLinkIcon mx='2px'/></Button>
       </Link>
       {Object.values(deck.products).map((productMap, index) => (
-        <EditProduct product={productMap} productIndex={index} deckId={deckId}/>
+        <EditProduct product={productMap} productIndex={productMap.productId} deckId={deckId}/>
       ))}
       {/* {deck.products.map( (product, index) => (
         <EditProduct product={product} key={index}/>

@@ -34,7 +34,7 @@ import {
 import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { FirestoreProvider, useFirestore, useFirebaseApp, useFirestoreCollectionData } from 'reactfire';
-import { doc, getFirestore, namedQuery, setDoc, query, collection  } from 'firebase/firestore';
+import { doc, getFirestore, namedQuery, setDoc, query, collection, where  } from 'firebase/firestore';
 import { IoShirtOutline, IoShirtSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router';
 import { Field, Form, Formik } from 'formik';
@@ -216,8 +216,6 @@ function DrawerExample() {
 }
 
 const Items = (products) => {
-
-
   const toast = useToast()
 
   console.log(products)
@@ -296,12 +294,15 @@ function CreateDeck() {
   const firestoreInstance = getFirestore(useFirebaseApp());
   const [ url, setUrl ] = React.useState(temp_url)
   const [ index, setIndex ] = React.useState(0)
+  const [ search, setSearch ] = React.useState("")
 
 
   const productQuery = query(
-    collection(firestoreInstance, "products"),
+    collection(firestoreInstance, "products"), 
+    where("name", ">=", search),
     // TODO: pagination... but how do we even handle this w/ respect to the deals display...
   )
+  console.log(productQuery)
   const { status: productStatus, data: product } = useFirestoreCollectionData(productQuery, { idField: "id" })
 
   if(productStatus === "loading") {
@@ -311,16 +312,28 @@ function CreateDeck() {
     )
   }
 
+  console.log("data: ", product)
+
   const Hit = ({ hit }) => (
     <p>
       {hit.name} - {hit.description}
     </p>
   )
 
+  const testSubmit = (e) => {
+    console.log("Search value", search)
+
+  }
+
+
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
         <Header />
+        <HStack justify={"center"}>
+          <Input placeholder="Search" onChange={(event) => setSearch(event.target.value)}/>
+          <Button colorScheme="green" onClick={() => testSubmit()}>Search</Button>
+        </HStack>
         <InstantSearch searchClient={searchClient} indexName="products">
           <SearchBox />
           <Stats />
