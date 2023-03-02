@@ -27,9 +27,11 @@ import React from "react";
 import ExampleProductImage from "../unnamed.jpg";
 import { doc, getFirestore } from 'firebase/firestore';
 import { FirestoreProvider, useFirestoreDocData, useFirestore, useFirebaseApp } from 'reactfire';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import Example from "./Example.png"
 import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import trackPathForAnalytics from '../TrackPathForAnalytics';
+import { useCallback, useEffect } from 'react';
 
 const DeckHeader = (data) => {
   console.log("Header", data)
@@ -148,6 +150,16 @@ const SalesDeck = () => {
 
 const DeckPage = () => {
   const firestoreInstance = getFirestore(useFirebaseApp());
+
+  const { pathname, search } = useLocation();
+
+  const analytics = useCallback(() => {
+      trackPathForAnalytics({ path: pathname, search: search, title: pathname.split("/")[1] });
+  }, [pathname, search]);
+
+  useEffect(() => {
+      analytics();
+  }, [analytics]);
 
   return (
     <FirestoreProvider sdk={firestoreInstance}>

@@ -33,25 +33,11 @@ import {
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreDocData } from "reactfire";
-import { useParams, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
 import {CheckIcon, CloseIcon, ExternalLinkIcon} from '@chakra-ui/icons'
 import { Field } from "formik";
-
-
-/*
- 
-for this to work i need the 
-deck id 
-product index
-for top level fields i need the field name and the value
-for nest fields, i need the field name, the nest index, and the nest field and the nest value
-- see the example below 
- "products.0.pricing.0.price": "100,000"
-
- name = field
-
-*/
+import trackPathForAnalytics from '../TrackPathForAnalytics';
 
 async function UpdateName(field, value, deckId) {
   /*
@@ -154,7 +140,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
   if (product.name.includes(product.id)) {
     product.name = product.name.replace(product.id, "")
   }
-  
+
 
   return (
     <Card size="lg" minHeight="200px" m="10">
@@ -193,66 +179,14 @@ const EditProduct = ({ product, productIndex, deckId }) => {
 
 }
 
-
-
 const Deck = () => {
   const { id: deckId } = useParams();
   // add firestore
-  
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // // easily access the Firestore library
-  // const deckRef = doc(useFirestore(), 'decks', deckId);
-
-  // // subscribe to a document for realtime updates. just one line!
-  // const { status, data: deck } = useFirestoreDocData(deckRef);
-
-
-
-  /* 
-  put this in a useEffect
-    const docRef = doc(db, "decks", deckId);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-  }
-  */
-  async function GetDeck() {
-    const docRef = doc(useFirestore(), "decks", deckId);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      // return docSnap.data()
-      var deck = docSnap.data()
-      return (
-        <Box>
-          <EditField field="name" value={deck.name} deckId={deckId}/>
-          <Link m="5" target="_blank" href={"/view/" + deckId}>
-              <Button colorScheme='gray'>View <ExternalLinkIcon mx='2px'/></Button>
-          </Link>
-          {Object.values(deck.products).map((productMap, index) => (
-            <EditProduct product={productMap} productIndex={productMap.id} deckId={deckId}/>
-          ))}
-        </Box>
-      )
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-      return (
-        <Box>
-          <Text>Deck not found</Text>
-        </Box>
-      )
-    }
-  }
   const db = getFirestore();
 
   useEffect(() => {
@@ -291,44 +225,26 @@ const Deck = () => {
     </Box>
     );
   }
-}
-
-
-  
-  // error handling
-  
-
-
-  // get the document and do not subscribe to realtime updates
-  // const { status, data: deck } = useFirestoreDocData(deckRef, { initialData: 'loading' });
-
-
-  // // easily check the loading status
-
-  // console.log("Deck", deck)
-
-  // return (
-    // <Box>
-    //   <EditField field="name" value={deck.name} deckId={deckId}/>
-    //   <Link m="5" target="_blank" href={"/view/" + deckId}>
-    //       <Button colorScheme='gray'>View <ExternalLinkIcon mx='2px'/></Button>
-    //   </Link>
-    //   {Object.values(deck.products).map((productMap, index) => (
-    //     <EditProduct product={productMap} productIndex={productMap.id} deckId={deckId}/>
-    //   ))}
-    //   {/* {deck.products.map( (product, index) => (
-    //     <EditProduct product={product} key={index}/>
-    //   ))} */}
-    // </Box>
-  // )
-
+};
 
 const EditDeck = () => {
   const firestoreInstance = getFirestore(useFirebaseApp());
+
   const navigate = useNavigate();
   const onClick = () => {
     navigate('/demo')
   }
+
+  const { pathname, search } = useLocation();
+
+  const analytics = useCallback(() => {
+      trackPathForAnalytics({ path: pathname, search: search, title: pathname.split("/")[1] });
+  }, [pathname, search]);
+
+  useEffect(() => {
+      analytics();
+  }, [analytics]);
+
 
   return (
     <FirestoreProvider sdk={firestoreInstance}>

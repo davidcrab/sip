@@ -49,9 +49,23 @@ import useSWR from 'swr'
 import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { FirestoreProvider, useFirestoreCollectionData, useFirestore, useFirebaseApp } from 'reactfire';
 import { doc, getFirestore, query, collection, orderBy } from 'firebase/firestore';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
+import trackPathForAnalytics from '../TrackPathForAnalytics';
+import { useCallback, useEffect } from 'react';
 
 function MyDecks() {
+
+  const { pathname, search } = useLocation();
+
+  const analytics = useCallback(() => {
+      trackPathForAnalytics({ path: pathname, search: search, title: pathname.split("/")[1] });
+  }, [pathname, search]);
+
+  useEffect(() => {
+      analytics();
+  }, [analytics]);
+
+
  const firestoreInstance = getFirestore(useFirebaseApp());
  const navigate = useNavigate()
 

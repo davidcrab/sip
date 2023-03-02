@@ -10,7 +10,9 @@ Center,
 VStack,
 } from '@chakra-ui/react';
 import React from 'react';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
+import trackPathForAnalytics from '../TrackPathForAnalytics';
+import { useCallback, useEffect } from 'react';
 
 const Landing = () => {
   
@@ -19,6 +21,17 @@ const Landing = () => {
   const onClick = () => {
     navigate('/demo');
   }
+
+  const { pathname, search } = useLocation();
+
+  const analytics = useCallback(() => {
+      trackPathForAnalytics({ path: pathname, search: search, title: pathname.split("/")[1] });
+  }, [pathname, search]);
+
+  useEffect(() => {
+      analytics();
+  }, [analytics]);
+
 
 
   return (
