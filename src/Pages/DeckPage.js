@@ -71,10 +71,13 @@ const Product = (product) => {
   const descriptions = product.product.descriptions.split('-')
   descriptions.shift()
 
-    // if the product id is in the product name string, remove it
-    if (product.product.name.includes(product.product.id)) {
-      product.product.name = product.product.name.replace(product.product.id, "")
-    }  
+  // if the product id is in the product name string, remove it
+  if (product.product.name.includes(product.product.id)) {
+    product.product.name = product.product.name.replace(product.product.id, "")
+  }
+
+  const prices = product.product.pricing.split('-')
+  prices.shift()
 
   return (
     <Card maxW='400' minW="sm" minH="sm" variant={"elevated"}>
@@ -108,8 +111,9 @@ const Product = (product) => {
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
-          <Text color='blue.600' fontSize='2xl'>{product.product.pricing}</Text>
-
+          {prices.map(price => (
+            <Text color='blue.600' fontSize='2xl'>{price}</Text>
+          ))}
         </Stack>
       </CardBody>
     </Card>

@@ -1,4 +1,4 @@
-import { ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import App from './App';
@@ -22,10 +22,12 @@ const firebaseConfig = {
 
 root.render(
   <FirebaseAppProvider firebaseConfig={firebaseConfig}>
-    <StrictMode>
-      <ColorModeScript />
-      <App />
-    </StrictMode>
+    <ChakraProvider theme={theme}>
+      <StrictMode>
+        <ColorModeScript />
+        <App />
+      </StrictMode>
+    </ChakraProvider>
   </FirebaseAppProvider>
 );
 

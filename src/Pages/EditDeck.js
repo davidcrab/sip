@@ -6,14 +6,10 @@ import {
   Card,
   CardHeader,
   HStack,
-  Grid,
-  GridItem,
   Image,
   CardFooter,
   CardBody,
   Text,
-  UnorderedList,
-  ListItem,
   useEditableControls,
   ButtonGroup,
   IconButton,
@@ -30,6 +26,9 @@ import {
   Link,
   Divider,
   Textarea,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Breadcrumb
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreDocData } from "reactfire";
@@ -118,14 +117,14 @@ const EditField = ({ field, value, productIndex, deckId }) => {
       >
         <Tooltip label="Click to edit">
           <EditablePreview
-            py={2}
-            px={4}
+            py={10}
+            px={20}
             _hover={{
               background: useColorModeValue("gray.100", "gray.700")
             }}
           />
         </Tooltip>
-        <Input py={2} px={4} as={EditableTextarea} size='lg'/>
+        <Textarea py={2} px={4} as={EditableTextarea} size='lg'/>
         <EditableControls />
       </Editable>
   );
@@ -149,7 +148,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
       </CardHeader>
       <CardBody minHeight="200px" pt="0">
         <VStack>
-          <HStack>
+          <VStack>
             <Image src={product.image} />
             <Spacer />
             <VStack>
@@ -161,7 +160,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
               <Heading size="sm">Price</Heading>
               <EditField field="pricing" value={product.pricing} productIndex={product.id} deckId={deckId}/>
             </VStack>
-          </HStack>
+          </VStack>
         </VStack>
       </CardBody>
       <CardFooter mt="10">
@@ -212,10 +211,15 @@ const Deck = () => {
     const deck = data;
     return (
       <Box>
-      <EditField field="name" value={deck.name} deckId={deckId}/>
-      <Link m="5" target="_blank" href={"/view/" + deckId}>
-          <Button colorScheme='gray'>View <ExternalLinkIcon mx='2px'/></Button>
-      </Link>
+        <HStack m="5" mt={"0"}>
+          <EditField field="name" value={deck.name} deckId={deckId}/>
+          <Spacer />
+          <Button onClick={() => window.location.reload()} colorScheme={"blue"}>Refresh Products</Button>
+          <Link m="5" target="_blank" href={"/view/" + deckId}>
+              <Button colorScheme='gray'>Preview<ExternalLinkIcon mx='2px'/></Button>
+          </Link>
+        </HStack>
+        <Divider />
       {Object.values(deck.products).map((productMap, index) => (
         <EditProduct product={productMap} productIndex={productMap.id} deckId={deckId}/>
       ))}
@@ -250,9 +254,15 @@ const EditDeck = () => {
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
         <HStack m="5">
+          <Breadcrumb ml="5">
+            <BreadcrumbItem>
+              <BreadcrumbLink onClick={onClick}>Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>Edit Deck
+            </BreadcrumbItem>
+          </Breadcrumb>
           <Text>Edit Deck Page</Text>
           <Spacer />
-          <Button onClick={onClick}>My Decks</Button>
         </HStack>
         <Deck />
       </ChakraProvider>
