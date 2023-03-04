@@ -20,15 +20,6 @@ import {
   Stack,
   CardFooter,
   Divider,
-  UnorderedList,
-  ListItem,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
   Link,
   Tooltip
 } from '@chakra-ui/react';
@@ -41,6 +32,7 @@ import { useNavigate, useLocation } from 'react-router';
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import { useCallback, useEffect } from 'react';
 import LoginButton from '../components/Login';
+import Mockup from './ProductEditor';
 
 function MyDecks() {
   const { status: userStatus, data: user } = useUser();
@@ -118,6 +110,7 @@ function MyDecks() {
           </HStack>
           {user && <Text>Current user: {user.uid}</Text>} {/* add a conditional check for user object */}
           <Divider mt="10" mb="10"/>
+          <Mockup />
           <Center>
             <Card variant={"filled"} w="80%">
               <CardHeader>

@@ -32,8 +32,6 @@ const Landing = () => {
       analytics();
   }, [analytics]);
 
-
-
   return (
     <ChakraBaseProvider theme={theme}>
       <Box mb="0">

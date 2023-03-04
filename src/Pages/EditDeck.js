@@ -37,6 +37,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import {CheckIcon, CloseIcon, ExternalLinkIcon} from '@chakra-ui/icons'
 import { Field } from "formik";
 import trackPathForAnalytics from '../TrackPathForAnalytics';
+import Mockup from "./ProductEditor";
 
 async function UpdateName(field, value, deckId) {
   /*
@@ -149,7 +150,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
       <CardBody minHeight="200px" pt="0">
         <VStack>
           <VStack>
-            <Image src={product.image} />
+            <Mockup src={product.image} />
             <Spacer />
             <VStack>
               <Heading size={"sm"}>Description</Heading>
