@@ -150,7 +150,7 @@ const EditProduct = ({ product, productIndex, deckId }) => {
       <CardBody minHeight="200px" pt="0">
         <VStack>
           <VStack>
-            <Mockup src={product.image} />
+            <Mockup src={product.image} deckId={deckId} productId={product.id}  />
             <Spacer />
             <VStack>
               <Heading size={"sm"}>Description</Heading>

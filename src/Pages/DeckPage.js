@@ -83,7 +83,8 @@ const Product = (product) => {
     <Card maxW='400' minW="sm" minH="sm" variant={"elevated"}>
       <CardBody align="center" w="full">
         <Image
-          src={product.product.image}
+          // if the product has a customImage, use that, otherwise use the image
+          src={product.product.customImage ? product.product.customImage : product.product.image}
           alt='Product Name'
           borderRadius='lg'
           objectFit='cover'

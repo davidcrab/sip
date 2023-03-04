@@ -1,5 +1,5 @@
 import { useStorage, useStorageDownloadURL } from 'reactfire'
-import { ref, getStorage, uploadBytes, uploadString } from 'firebase/storage';
+import { ref, getStorage, uploadBytes, uploadString, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import React, { useRef, useState, useEffect, } from 'react';
 import {
   exportComponentAsPNG,
@@ -10,6 +10,7 @@ import logo from './gg-logo.png';
 import html2canvas from 'html2canvas';
 import * as htmlToImage from 'html-to-image';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
@@ -29,11 +30,21 @@ function dataURItoBlob(dataURI) {
   return new Blob([ab], { type: mimeString });
 }
 
+/* Update the product image in the database */
+const updateProductImage = (deckId, productId, image) => {
+  const db = getFirestore();
+  const deckRef = doc(db, "decks", deckId);
+  let field = "products." + productId + ".customImage"
+  updateDoc(deckRef, {
+    [field]: image,
+  });
+}
+
 /*
   will need something like the deck id and the product id for this to work
   pass in encode imagee 
 */
-const Mockup = (encodedImage) => {
+const Mockup = (props) => {
   const componentRef = useRef();
   const storage = useStorage();
   const catRef = ref(storage, '5950_REDWHT_Blank.jpeg');
@@ -43,20 +54,63 @@ const Mockup = (encodedImage) => {
   const { status: logoStatus, data: logoURL } = useStorageDownloadURL(logoRef);
 
   const [isExporting, setIsExporting] = useState(false);
+  console.log(props.src)
 
   useEffect(() => {
-    if (encodedImage && logoURL && isExporting) {
+    if (props.src && logoURL && isExporting) {
       htmlToImage.toPng(componentRef.current)
       .then(function (dataUrl) {
+        let imageName = props.deckId + "_" + props.productId + ".png";
         // Create a reference to the image in Firebase Storage
-        const imagesRef = ref(storage, 'my-new-image.png');
+        const imagesRef = ref(storage, imageName);
   
         // Convert the data URL to a Blob object
         const blob = dataURItoBlob(dataUrl);
   
         // Upload the Blob to Firebase Storage
-        uploadBytes(imagesRef, blob).then((snapshot) => {
-          console.log('Uploaded a blob or file!');
+        // uploadBytes(imagesRef, blob).then((snapshot) => {
+        //   console.log('Uploaded a blob or file!');
+        // })
+
+        const uploadTask = uploadBytesResumable(imagesRef, blob);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        }, 
+        (error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        }, 
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            updateProductImage(props.deckId, props.productId, downloadURL);
+            setIsExporting(false);
+          });
         });
       })
       .catch(function (error) {
@@ -71,7 +125,7 @@ const Mockup = (encodedImage) => {
       //   });
       // });
     }
-  }, [encodedImage, logoURL, isExporting, storage]);
+  }, [props.src, logoURL, isExporting, storage, props.deckId, props.productId]);
 
   const handleExport = () => {
     setIsExporting(true);
@@ -82,89 +136,12 @@ const Mockup = (encodedImage) => {
     return <span>loading...</span>;
   }
 
-  // this one is working, wile the other one is not.
-  const ComponentToPrint = React.forwardRef((props, ref) => (
-    <div
-      ref={ref}
-       style={{
-         background: `url(${imageURL})`,
-         backgroundSize: 'contain',
-         backgroundRepeat: 'no-repeat',
-         width: 400,
-         height: 400,
-       }}
-    >
-      <Draggable>
-        <Resizable
-          defaultSize={{
-            width: 200,
-            height: 360,
-          }}
-          style={{
-            background: `url(${logoURL})`,
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-          }}
-          lockAspectRatio={true}
-        ></Resizable>
-      </Draggable>
-    </div>
-  ));
-
-  const UploadNewImageOld = async (componentRef) => {
-    let image = exportComponentAsPNG(componentRef)
-
-    // Create a reference to 'mountains.jpg'
-    // Create a reference to 'images.png'
-    const imagesRef = ref(storage, 'images.png');
-
-    // Create a reference to 'images/mountains.jpg'
-    //const cupImagesRef = ref(storage, 'images/up.jpg');
-
-    // Convert data URL to blob
-    const response = await fetch(image);
-    const blob = await response.blob();
-
-    // 'file' comes from the Blob or File API
-    await uploadBytes(imagesRef, blob).then((snapshot) => {
-      console.log('Uploaded a blob or file!');
-    });
-
-  }
-
-  const uploadComponentAsImage = async (componentRef) => {
-    // Use html2canvas to convert the component to an HTML canvas
-    const canvas = await html2canvas(componentRef.current);
-
-    // Convert the canvas to a data URL
-    const dataUrl = canvas.toDataURL('image/png');
-
-    // Upload the data URL to Firebase Storage
-    const storageRef = ref(storage, 'image.png');
-    await uploadString(storageRef, dataUrl, 'data_url');
-    console.log('Uploaded component as image!');
-  };
-
-  const UploadNewImage = async (componentRef) => {
-    html2canvas(componentRef.current).then((canvas) => {
-      canvas.toBlob(async (blob) => {
-        // Create a reference to the new image file in Firebase Storage
-        const imageRef = ref(storage, 'my-new-image.png');
-
-        // Upload the image file to Firebase Storage
-        await uploadBytes(imageRef, blob);
-
-        console.log('Image uploaded successfully!');
-      }, 'image/png');
-    });
-  };
-
   return (
     <div>
       <div
         ref={componentRef}
         style={{
-          background: `url(${encodedImage})`,
+          background: `url(${props.src})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           width: 400,
@@ -186,7 +163,7 @@ const Mockup = (encodedImage) => {
           ></Resizable>
         </Draggable>
       </div>
-      <button onClick={handleExport}>Export As PNG</button>
+      <button onClick={handleExport}>Save Customization</button>
     </div>
   );
 
