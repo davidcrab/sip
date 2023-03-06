@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 import * as htmlToImage from 'html-to-image';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
+import { ChakraBaseProvider, theme, Button } from '@chakra-ui/react';
 
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
@@ -135,48 +136,50 @@ const Mockup = (props) => {
   if (logoStatus === 'loading') {
     return <span>loading...</span>;
   }
+  console.log(props.customImage)
+  /* if props.customImage is true return just that image with text indicating its already been customized*/
+  if (props.customImage) {
+    console.log("ALREADY CUSTOMIZED")
+    return (
+      <div>
+        <img src={props.customImage} alt="customized product" />
+        <p>Already Customized</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div
-        ref={componentRef}
-        style={{
-          background: `url(${props.src})`,
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat',
-          width: 400,
-          height: 400,
-        }}
-      >
-        <Draggable>
-          <Resizable
-            defaultSize={{
-              width: 200,
-              height: 360,
-            }}
-            style={{
-              background: `url(${logoURL})`,
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-            }}
-            lockAspectRatio={true}
-          ></Resizable>
-        </Draggable>
+    <ChakraBaseProvider theme={theme}>
+      <div>
+        <div
+          ref={componentRef}
+          style={{
+            background: `url(${props.src})`,
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            width: 400,
+            height: 400,
+          }}
+        >
+          <Draggable>
+            <Resizable
+              defaultSize={{
+                width: 200,
+                height: 360,
+              }}
+              style={{
+                background: `url(${logoURL})`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+              }}
+              lockAspectRatio={true}
+            ></Resizable>
+          </Draggable>
+        </div>
+        <Button onClick={handleExport}>Save Customization</Button>
       </div>
-      <button onClick={handleExport}>Save Customization</button>
-    </div>
+    </ChakraBaseProvider>
   );
-
-
-
-  // return (
-  //   <>
-  //     <ComponentToPrint ref={componentRef} />
-  //     <button onClick={() => UploadNewImage(componentRef)}>
-  //       Export As PNG
-  //     </button>
-  //   </>
-  // );
 };
 
 export default Mockup;

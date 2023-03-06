@@ -137,17 +137,26 @@ const SalesDeck = () => {
 
   // map through the products 
   console.log(data)
+  let productsArray = Object.values(data.products)
+  productsArray.sort((a, b) => (a.index > b.index) ? 1 : -1)
+
 
   return (
     <Box margin="0" h="full">
       <DeckHeader data={data.name} date={data.date} />
       <Wrap spacing="30px" justify="center" align="center" p="10">
-        {Object.values(data.products).map((productMap, index) => (
+        {productsArray.map((productMap, index) => (
           <WrapItem>
             <Product product={productMap} key={index} />
           </WrapItem>
         ))}
       </Wrap>
+        {/* {Object.values(data.products).map((productMap, index) => (
+          <WrapItem>
+            <Product product={productMap} key={index} />
+          </WrapItem>
+        ))}
+      </Wrap> */}
        <DeckFooter date={data.date}/>
     </Box>
   )

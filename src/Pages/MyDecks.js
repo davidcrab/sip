@@ -110,7 +110,6 @@ function MyDecks() {
           </HStack>
           {user && <Text>Current user: {user.uid}</Text>} {/* add a conditional check for user object */}
           <Divider mt="10" mb="10"/>
-          <Mockup />
           <Center>
             <Card variant={"filled"} w="80%">
               <CardHeader>

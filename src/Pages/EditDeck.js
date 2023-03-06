@@ -28,7 +28,12 @@ import {
   Textarea,
   BreadcrumbItem,
   BreadcrumbLink,
-  Breadcrumb
+  Breadcrumb,
+  Accordion,
+  AccordionItem,
+  AccordionIcon,
+  AccordionPanel,
+  AccordionButton,
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreDocData } from "reactfire";
@@ -118,8 +123,8 @@ const EditField = ({ field, value, productIndex, deckId }) => {
       >
         <Tooltip label="Click to edit">
           <EditablePreview
-            py={10}
-            px={20}
+            py={5}
+            px={10}
             _hover={{
               background: useColorModeValue("gray.100", "gray.700")
             }}
@@ -140,17 +145,22 @@ const EditProduct = ({ product, productIndex, deckId }) => {
   if (product.name.includes(product.id)) {
     product.name = product.name.replace(product.id, "")
   }
-
-
   return (
     <Card size="lg" minHeight="200px" m="10">
       <CardHeader>
+        <HStack>
           <EditField field="name" value={product.name} productIndex={product.id} deckId={deckId}/>
+          <Spacer />
+          <strong>Sort #</strong>
+          <EditField field="index" value={product.index} productIndex={product.id} deckId={deckId}/>
+        </HStack>
       </CardHeader>
       <CardBody minHeight="200px" pt="0">
         <VStack>
           <VStack>
-            <Mockup src={product.image} deckId={deckId} productId={product.id}  />
+            <Mockup src={product.image} deckId={deckId} productId={product.id} 
+            // if product.customImage is not null, use that, otherwise use product.image
+            customImage={product.customImage ? product.customImage : ""}/>
             <Spacer />
             <VStack>
               <Heading size={"sm"}>Description</Heading>
@@ -164,24 +174,34 @@ const EditProduct = ({ product, productIndex, deckId }) => {
           </VStack>
         </VStack>
       </CardBody>
-      <CardFooter mt="10">
+      <CardFooter>
       <Spacer />
         <VStack textAlign={"start"}>
-        <Divider w="full" />
-          <Heading size={"sm"}>Notes</Heading>
-          {product.notes.map(note => (
-            <Text w="full">{note}</Text>
-          ))}
+          <Accordion allowMultiple w="full">
+            <AccordionItem>
+              <h2>
+                <AccordionButton >
+                  <Box as="span" textAlign='center'>
+                    <Heading size={"lg"}>Notes</Heading>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                {product.notes.map(note => (
+                  <Text w="full">{note}</Text>
+                ))}
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </VStack>
       </CardFooter>
     </Card>
   )
-
 }
 
 const Deck = () => {
   const { id: deckId } = useParams();
-  // add firestore
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -210,6 +230,10 @@ const Deck = () => {
     return <p>Error: {error}</p>;
   } else {
     const deck = data;
+    // sort the products based on their index. products is a map, so we need to convert it to an array first
+    let productsArray = Object.values(deck.products)
+    productsArray.sort((a, b) => (a.index > b.index) ? 1 : -1)
+
     return (
       <Box>
         <HStack m="5" mt={"0"}>
@@ -221,12 +245,12 @@ const Deck = () => {
           </Link>
         </HStack>
         <Divider />
-      {Object.values(deck.products).map((productMap, index) => (
-        <EditProduct product={productMap} productIndex={productMap.id} deckId={deckId}/>
-      ))}
-      {/* {deck.products.map( (product, index) => (
-        <EditProduct product={product} key={index}/>
-      ))} */}
+        {productsArray.map((product, index) => (
+          <EditProduct product={product} productIndex={product.id} deckId={deckId}/>
+        ))}
+        {/* {Object.values(deck.products).map((productMap, index) => (
+          <EditProduct product={productMap} productIndex={productMap.id} deckId={deckId}/>
+        ))} */}
     </Box>
     );
   }
