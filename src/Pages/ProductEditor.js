@@ -11,7 +11,7 @@ import html2canvas from 'html2canvas';
 import * as htmlToImage from 'html-to-image';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
-import { ChakraBaseProvider, theme, Button } from '@chakra-ui/react';
+import { ChakraBaseProvider, theme, Button, Box, Input } from '@chakra-ui/react';
 
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
@@ -50,6 +50,7 @@ const Mockup = (props) => {
   const storage = useStorage();
   const catRef = ref(storage, '5950_REDWHT_Blank.jpeg');
   const logoRef = ref(storage, 'gg-logo.png');
+  const [imageFile, setImageFile] = useState(null);
 
   // const { status, data: imageURL } = useStorageDownloadURL(catRef);
   const { status: logoStatus, data: logoURL } = useStorageDownloadURL(logoRef);
@@ -131,6 +132,19 @@ const Mockup = (props) => {
   const handleExport = () => {
     setIsExporting(true);
   };
+  
+  const handleUploadLogo = (event) => {
+    console.log(event)
+    console.log("HANDLING IMAGE UPLOAD")
+    console.log(event.target.files[0])
+    // turn file into URL.
+    // set that URL as the src of the image
+    let url = URL.createObjectURL(event.target.files[0]);
+    setImageFile(url);
+    console.log(url)
+  };
+
+
 
 
   if (logoStatus === 'loading') {
@@ -150,7 +164,7 @@ const Mockup = (props) => {
 
   return (
     <ChakraBaseProvider theme={theme}>
-      <div>
+      <Box borderWidth='1px'>
         <div
           ref={componentRef}
           style={{
@@ -161,23 +175,26 @@ const Mockup = (props) => {
             height: 400,
           }}
         >
-          <Draggable>
-            <Resizable
-              defaultSize={{
-                width: 200,
-                height: 360,
-              }}
-              style={{
-                background: `url(${logoURL})`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-              }}
-              lockAspectRatio={true}
-            ></Resizable>
-          </Draggable>
+          {imageFile && (
+                      <Draggable>
+                      <Resizable
+                        defaultSize={{
+                          width: 200,
+                          height: 360,
+                        }}
+                        // upddate background image. if imageFile is null use logoURL. else use imageFile
+                        style={{
+                          background: `url(${imageFile ? imageFile : logoURL})`,
+                          backgroundSize: 'contain',
+                          backgroundRepeat: 'no-repeat',
+                        }}
+                        lockAspectRatio={true}
+                      ></Resizable>
+                    </Draggable>)}
         </div>
+        <Input type="file" onChange={handleUploadLogo} />
         <Button onClick={handleExport}>Save Customization</Button>
-      </div>
+      </Box>
     </ChakraBaseProvider>
   );
 };
