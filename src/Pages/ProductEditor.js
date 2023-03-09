@@ -6,7 +6,6 @@ import {
 } from 'react-component-export-image';
 import { Resizable } from 're-resizable';
 import Draggable from 'react-draggable';
-import logo from './gg-logo.png';
 import html2canvas from 'html2canvas';
 import * as htmlToImage from 'html-to-image';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
@@ -143,9 +142,6 @@ const Mockup = (props) => {
     setImageFile(url);
     console.log(url)
   };
-
-
-
 
   if (logoStatus === 'loading') {
     return <span>loading...</span>;

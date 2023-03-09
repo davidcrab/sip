@@ -36,19 +36,14 @@ import {
   AccordionButton,
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
-import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreDocData } from "reactfire";
+import { FirestoreProvider, useFirebaseApp } from "reactfire";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import {CheckIcon, CloseIcon, ExternalLinkIcon} from '@chakra-ui/icons'
-import { Field } from "formik";
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import Mockup from "./ProductEditor";
 
 async function UpdateName(field, value, deckId) {
-  /*
-  if the field is 
-  */
-  console.log(deckId)
   const db = getFirestore();
   const docRef = doc(db, "decks", deckId);
   await updateDoc(docRef, {
@@ -61,7 +56,7 @@ async function UpdateProductName(field, value, deckId, productIndex) {
   const docRef = doc(db, "decks", deckId);
   // update this to map in the field so like 
   let test = "products." + productIndex + "." + field
-  console.log(test)
+
   await updateDoc(docRef, {
     [test]: value,
   });
@@ -137,10 +132,6 @@ const EditField = ({ field, value, productIndex, deckId }) => {
 }
 
 const EditProduct = ({ product, productIndex, deckId }) => {
-
-  console.log("key", productIndex)
-  console.log("product id", product.id)
-
   // if the product id is in the product name string, remove it
   if (product.name.includes(product.id)) {
     product.name = product.name.replace(product.id, "")
@@ -248,9 +239,6 @@ const Deck = () => {
         {productsArray.map((product, index) => (
           <EditProduct product={product} productIndex={product.id} deckId={deckId}/>
         ))}
-        {/* {Object.values(deck.products).map((productMap, index) => (
-          <EditProduct product={productMap} productIndex={productMap.id} deckId={deckId}/>
-        ))} */}
     </Box>
     );
   }

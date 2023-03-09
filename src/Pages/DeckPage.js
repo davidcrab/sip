@@ -152,7 +152,6 @@ const DeckPage = () => {
           <SalesDeck height="100%" />
       </ChakraProvider>
     </FirestoreProvider>
-
   );
 }
 
