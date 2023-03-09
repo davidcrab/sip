@@ -3,9 +3,6 @@ import {
   ChakraProvider,
   Box,
   Text,
-  VStack,
-  Code,
-  Grid,
   theme,
   Card,
   CardBody,
@@ -16,8 +13,6 @@ import {
   Button,
   HStack,
   Spacer,
-  IconButton,
-  Stack,
   CardFooter,
   Divider,
   Link,
@@ -25,9 +20,8 @@ import {
 } from '@chakra-ui/react';
 import Draggable,  {DraggableCore}  from 'react-draggable'; // Both at the same time
 import useSWR from 'swr'
-import { HamburgerIcon, AddIcon, CloseIcon } from '@chakra-ui/icons'
-import { FirestoreProvider, useFirestoreCollectionData, useFirestore, useFirebaseApp, useUser } from 'reactfire';
-import { doc, getFirestore, query, collection, orderBy, where } from 'firebase/firestore';
+import { FirestoreProvider, useFirestoreCollectionData, useFirebaseApp, useUser } from 'reactfire';
+import { doc, getFirestore, query, collection, where } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router';
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import { useCallback, useEffect } from 'react';
@@ -50,13 +44,20 @@ function MyDecks() {
  const navigate = useNavigate()
 
  // query the decks with the user id
- const decksquery = user ? query(
-  collection(firestoreInstance, "decks"),
-  where("userId", "==", user.uid)
-) : query(
-  collection(firestoreInstance, "decks"),
-  where("userId", "==", "demo")
-)
+ let decksquery = user ? query(
+    collection(firestoreInstance, "decks"),
+    where("userId", "==", user.uid)
+  ) : query(
+    collection(firestoreInstance, "decks"),
+    where("userId", "==", "demo")
+  )
+
+  // if the userId, then this is me and I should have admin permission to view all ve2Q2aQj2ga4YJGcSwuvkSUi4R73
+  if (user && user.uid === "ve2Q2aQj2ga4YJGcSwuvkSUi4R73") {
+    decksquery = query(
+      collection(firestoreInstance, "decks")
+    )
+  }
 
   const { status: decksStatus, data: decks } = useFirestoreCollectionData(decksquery, { idField: "id" })
 
@@ -73,7 +74,6 @@ function MyDecks() {
     console.log("Clicked on " + id)
     navigate(`/edit/` + id)
   }
-
 
   const deckCards = decks.map(deck => (
       <Card>

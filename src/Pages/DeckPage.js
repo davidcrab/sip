@@ -12,7 +12,6 @@ import {
   Text,
   ChakraProvider,
   theme,
-  Button,
   Stack,
   Wrap, 
   WrapItem,
@@ -24,14 +23,12 @@ import {
   Divider
 } from "@chakra-ui/react";
 import React from "react";
-import ExampleProductImage from "../unnamed.jpg";
 import { doc, getFirestore } from 'firebase/firestore';
 import { FirestoreProvider, useFirestoreDocData, useFirestore, useFirebaseApp } from 'reactfire';
 import { Link, useParams, useLocation } from "react-router-dom";
-import Example from "./Example.png"
-import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import { useCallback, useEffect } from 'react';
+import ContactCard from "../components/ContactCard";
 
 const DeckHeader = (data) => {
   console.log("Header", data)
@@ -41,29 +38,10 @@ const DeckHeader = (data) => {
         <HStack w={"95%"} m="5">
           <Heading size="xl">{data.data}</Heading>
           <Spacer />
-          <Stack direction='row' spacing={4}>
-            {/* <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'>
-              Email Ryan
-            </Button>
-            <Button leftIco={<PhoneIcon />} colorScheme='teal' variant='outline'>
-              443-852-4722
-            </Button> */}
-          </Stack>
         </HStack>
         <Divider />
       </VStack>
     </Box>
-  )
-}
-
-const DeckFooter = (data) => {
-  return (
-    <VStack>
-      <Heading size="sm">Prepared by</Heading>
-      <Spacer />
-      <Heading size="lg">G&G Outfitters, Inc</Heading>
-      <Heading size="xs">{data.date}</Heading>
-    </VStack>
   )
 }
 
@@ -74,6 +52,9 @@ const Product = (product) => {
   // if the product id is in the product name string, remove it
   if (product.product.name.includes(product.product.id)) {
     product.product.name = product.product.name.replace(product.product.id, "")
+    // remove the - 
+    console.log(product.product.name)
+    product.product.name = product.product.name.replace("-", "")
   }
 
   const prices = product.product.pricing.split('-')
@@ -125,21 +106,17 @@ const SalesDeck = () => {
   const { id: projectId } = useParams();
 
   // easily access the Firestore library
-  const burritoRef = doc(useFirestore(), 'decks', projectId);
+  const deckRef = doc(useFirestore(), 'decks', projectId);
 
   // subscribe to a document for realtime updates. just one line!
-  const { status, data } = useFirestoreDocData(burritoRef);
+  const { status, data } = useFirestoreDocData(deckRef);
 
   // easily check the loading status
   if (status === 'loading') {
     return <p>Fetching products...</p>;
   }
-
-  // map through the products 
-  console.log(data)
   let productsArray = Object.values(data.products)
   productsArray.sort((a, b) => (a.index > b.index) ? 1 : -1)
-
 
   return (
     <Box margin="0" h="full">
@@ -151,13 +128,7 @@ const SalesDeck = () => {
           </WrapItem>
         ))}
       </Wrap>
-        {/* {Object.values(data.products).map((productMap, index) => (
-          <WrapItem>
-            <Product product={productMap} key={index} />
-          </WrapItem>
-        ))}
-      </Wrap> */}
-       <DeckFooter date={data.date}/>
+      <ContactCard props={data.userId}/>
     </Box>
   )
 }
