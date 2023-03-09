@@ -176,21 +176,20 @@ const Mockup = (props) => {
           }}
         >
           {imageFile && (
-                      <Draggable>
-                      <Resizable
-                        defaultSize={{
-                          width: 200,
-                          height: 360,
-                        }}
-                        // upddate background image. if imageFile is null use logoURL. else use imageFile
-                        style={{
-                          background: `url(${imageFile ? imageFile : logoURL})`,
-                          backgroundSize: 'contain',
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                        lockAspectRatio={true}
-                      ></Resizable>
-                    </Draggable>)}
+          <Draggable>
+          <Resizable
+            defaultSize={{
+              width: 200,
+              height: 360,
+            }}
+            style={{
+              background: `url(${imageFile ? imageFile : logoURL})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+            }}
+            lockAspectRatio={true}
+          ></Resizable>
+        </Draggable>)}
         </div>
         <Input type="file" onChange={handleUploadLogo} />
         <Button onClick={handleExport}>Save Customization</Button>

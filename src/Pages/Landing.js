@@ -43,10 +43,9 @@ const Landing = () => {
         <Box margin="30" mt="10">
           <Center>
             <VStack textAlign={"center"} spacing={4}>
-              <Heading lineHeight={"120%"} size="4xl">Send custom product decks in minutes.</Heading>
-              <Heading size="lg">Stop jumping around vendor websites.</Heading>
+              <Heading lineHeight={"120%"} size="4xl">Send personalized product decks in minutes.</Heading>
               <Heading size="lg">Never copy product data into a PowerPoint again.</Heading>
-              <Heading size="sm">We've simplified the process so you can focus on what matters.</Heading>
+              <Heading size="sm">Focus on building strong relationships and closing more deals</Heading>
               <Spacer />
               <Button size="lg" colorScheme={"green"} w="200px" onClick={onClick}>Try Now</Button>
             </VStack>
