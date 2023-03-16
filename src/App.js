@@ -13,6 +13,7 @@ import { useCallback, useEffect } from 'react';
 import { useLocation } from "react-router";
 import { getAuth } from 'firebase/auth'; // Firebase v9+
 import { getStorage } from 'firebase/storage'; // Firebase v9+
+import VendorPage from './Pages/VendorPage';
 
 
 export const App = () => {
@@ -44,6 +45,7 @@ const AppInner = () => {
               <Route path="/create" element={<CreateDeck />} />
               <Route path="/edit/:id" element={<EditDeck />} />
               <Route path="/view/:id" element={<DeckPage />} />
+              <Route path="/vendorStatus" element={<VendorPage />} />
             </Routes>
           </BrowserRouter>
         </FirestoreProvider>

@@ -105,6 +105,7 @@ const Landing = () => {
           <HStack m="5">
             <Heading>Sip Decks</Heading>
             <Spacer />
+            <Button as="a" target="_blank" href={"/vendorStatus"}>Vendor Status</Button>
             <Button colorScheme={"green"} onClick={onClick} size="md">Check it out</Button>
           </HStack>
           <Divider />

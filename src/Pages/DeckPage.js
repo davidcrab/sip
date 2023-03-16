@@ -186,30 +186,6 @@ const SalesDeck = () => {
       </Center>
     )
   }
-  
-
-
-    /*
-
-    */
-
-  //   return (
-  //     <Center>
-  //       <Box w="85%" bg="white" p="20" borderRadius="lg">
-  //         <HStack align="flex" justify="space-around" w="full">
-  //           <Image src={images[0]} w="200px" h="200px" />
-  //           <Image src={images[1]} w="125px" h="125px" />
-  //           <Image src={images[2]} w="75px" h="75px" />
-  //           <Image src={images[3]} w="250px" h="250px" />
-  //           <Image src={images[4]} w="175px" h="175px" />
-  //           <Image src={images[5]} borderRadius="" w="100px" h="100px" />
-  //         </HStack>
-  //       </Box>
-  //     </Center>
-  //   )
-  // }
-
-
 
   return (
     <Box margin="" h="100%" bg="#f8f8f8">
