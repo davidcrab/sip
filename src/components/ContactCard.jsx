@@ -21,7 +21,7 @@ const ContactCard = ({ props }) => {
   const emailLink = `mailto:${userData.contactEmail}`;
 
   return (
-    <Card m="10%" variant={"filled"} size="sm" p="2">
+    <Card bg="white" variant={"filled"} size="sm" p="2">
       <CardHeader>
         Please reach out to me at any of the following
       </CardHeader>

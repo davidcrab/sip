@@ -91,9 +91,7 @@ function MyDecks() {
         </Tooltip>
         <Divider />
         <CardFooter w="full">
-          <Link w="full" target="_blank" href={"/view/" + deck.id}>
-            <Button w="full" size="lg" colorScheme='gray'>Preview</Button>
-          </Link>
+            <Button as="a" w="full" size="lg" colorScheme='gray' target="_blank" href={"/view/" + deck.id}>Preview</Button>
         </CardFooter>
       </Card>
   ))

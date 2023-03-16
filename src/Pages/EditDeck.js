@@ -246,7 +246,6 @@ const Deck = () => {
         </HStack>
         <Divider />
         <AddProduct deckId={deckId}/>
-        <Divider />
         {productsArray.map((product, index) => (
           <EditProduct product={product} productIndex={product.id} deckId={deckId}/>
         ))}
@@ -341,11 +340,11 @@ const AddProduct = ({ deckId }) => {
               <FormLabel>Image URL</FormLabel>
               <Input type="text" name="image" value={product.image} onChange={handleChange} />
             </FormControl>
-            <FormControl id="descriptions" isRequired>
+            <FormControl id="descriptions">
               <FormLabel>Descriptions (Each bullet point must start with a dash: -)</FormLabel>
               <Textarea type="text" name="descriptions" value={product.descriptions} onChange={handleChange} />
             </FormControl>
-            <FormControl id="pricing" isRequired>
+            <FormControl id="pricing">
               <FormLabel>Pricing (Each bullet point must start with a dash: -)</FormLabel>
               <Input type="text" name="pricing" value={product.pricing} onChange={handleChange} />
             </FormControl>
