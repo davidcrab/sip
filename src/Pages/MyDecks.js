@@ -103,7 +103,7 @@ function MyDecks() {
           <HStack ml="10" mr="10" mt="10">
             <Heading>All Decks</Heading>
             <Spacer />
-            <Link href="https://david-crabtree-resume-bucket.s3.amazonaws.com/sip-sales-extension-0.0.01.zip" target="_blank"><Button size="lg">Download Extension</Button></Link>
+            <Link href="https://david-crabtree-resume-bucket.s3.amazonaws.com/sip-sales-extension-0.0.01.zip" target="_blank"><Button size="lg" isDisabled>Download Extension</Button></Link>
             <LoginButton />
           </HStack>
           {user && <Text>Current user: {user.uid}</Text>} {/* add a conditional check for user object */}
