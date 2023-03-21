@@ -43,8 +43,8 @@ function FormikExample() {
           email: values.name
         });      
         toast({
-          title: 'Demo Requested!',
-          description: "We will reach out to you shortly.",
+          title: 'We hear you!',
+          description: "You will recieve an email from us shortly.",
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -64,13 +64,13 @@ function FormikExample() {
               )}
             </Field>
             <Button
-              colorScheme='green'
+              colorScheme='yellow'
               isLoading={props.isSubmitting}
               type='submit'
               size="lg"
               width="200px"
             >
-              Request a demo
+              Talk to us
             </Button>
           </HStack>
         </Form>
@@ -103,32 +103,50 @@ const Landing = () => {
       <ChakraBaseProvider theme={theme}>
         <Box mb="0">
           <HStack m="5">
-            <Heading>Sip Decks</Heading>
+            <Heading color="gray">flexpromo</Heading>
             <Spacer />
-            <Button as="a" target="_blank" href={"/vendorStatus"}>Vendor Status</Button>
-            <Button colorScheme={"green"} onClick={onClick} size="md">Check it out</Button>
+            <Button as="a" target="_blank" href={"/flexpromo"} variant="link">Search Products</Button>
+            <Button as="a" target="_blank" href={"/vendorStatus"}>Supplier Status</Button>
+            <Button colorScheme={"yellow"} onClick={onClick} size="md" >Try it out</Button>
           </HStack>
           <Divider />
-          <Box margin="30" mt="10">
+          <VStack margin="30" mb="0" pt="50" pb="50" align="center" textAlign={"center"} ml="5" color="gray">
+            <Heading>Create. Personalize. Share.</Heading>
+            <Heading>Seamless product showcases for your clients</Heading>
+            <Text>Import products directly from your suppliers website</Text>
+          </VStack>
+
+          <Box margin="30" mt="0">
             <Center>
               <VStack textAlign={"center"} spacing={4}>
-                <Heading lineHeight={"120%"} size="lg">Handpick, personalize, and share promotional product pitch decks in minutes.</Heading>
-                <Text>In a few clicks, import products your vendor's product data and personalize them for your client.</Text>
+                {/* <Heading lineHeight={"120%"} size="lg">Create & share product showcases from your suppliers' websites</Heading>
+                <Text>In a few clicks, import products your vendor's product data and personalize them for your client.</Text> */}
                 <AspectRatio width={["100px", "500px", "800px"]} ratio={16 / 9}>
                   <iframe src="https://www.youtube.com/embed/xtDRVMaaP_4" title="Sip Decks Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
                 </AspectRatio>
                 <Spacer />
-                <Heading size="md">Get a demo of Sip Decks</Heading>
+                {/* <Heading size="md">Let us show you how top distributors are using flexpromo</Heading> */}
                 <FormikExample />
+                <Text>Let us show you how top distributors are using flexpromo</Text>
                 <Spacer />
-                <Image src={deckScreenShot} alt="Sip Decks Demo" />
+                {/* <Image src={deckScreenShot} alt="Sip Decks Demo" /> */}
               </VStack>
             </Center>
           </Box>
-          <Box mt="20" bg="gray.50" mb="0">
-            <VStack margin="30" mb="0" pt="50" pb="50" align="center" textAlign={"center"} ml="5">
-              <Heading>Share winning promotion product decks in minutes, not hours.</Heading>
+          {/* <Box mt="20" bg="gray.50" mb="0">
+            <VStack margin="30" mb="0" pt="50" pb="50" align="center" textAlign={"center"} ml="5" color="gray">
+              <Heading>Seamlessly showcase your products</Heading>
               <Heading size="lg">Focus on building strong relationships and closing more deals.</Heading>
+            </VStack>
+          </Box> */}
+          <Box bg="gray.50" mb="0">
+            <VStack margin="30" mb="0" mt="0" pt="10" pb="50" align="center" textAlign={"center"} ml="5" color="gray">
+              <Heading>How it works</Heading>
+              <Text>Browse supplier websites like usual</Text>
+              <Text>Import products with one click</Text>
+              <Text>Personalize the showcase for your client</Text>
+              <Text>Update product details</Text>
+              <Text>Share the mobile friendly showcase</Text>
             </VStack>
           </Box>
         </Box>

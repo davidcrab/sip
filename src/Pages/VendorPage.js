@@ -53,7 +53,7 @@ const VendorPage = () => {
         <Card size="sm" minW="sm">
           <CardHeader>
             <Heading>Primeline</Heading>
-            <strong>Status: <strong style={{color: "orange"}}>Testing</strong></strong>
+            <strong>Status: <strong style={{color: "green"}}>Connected</strong></strong>
           </CardHeader>
           <Divider />
           <CardBody>
@@ -79,7 +79,7 @@ const VendorPage = () => {
         <Card size="sm" minW="sm">
           <CardHeader>
             <Heading>PCNA</Heading>
-            <strong>Status: <strong style={{color: "orange"}}>Testing</strong></strong>
+            <strong>Status: <strong style={{color: "green"}}>Connected</strong></strong>
           </CardHeader>
           <Divider />
           <CardBody>
@@ -105,7 +105,7 @@ const VendorPage = () => {
         <Card size="sm" minW="sm">
           <CardHeader>
             <Heading>High Caliber</Heading>
-            <strong>Status: <strong style={{color: "orange"}}>Testing</strong></strong>
+            <strong>Status: <strong style={{color: "green"}}>Connected</strong></strong>
           </CardHeader>
           <Divider />
           <CardBody>

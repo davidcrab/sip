@@ -103,25 +103,12 @@ function MyDecks() {
           <HStack ml="10" mr="10" mt="10">
             <Heading>All Decks</Heading>
             <Spacer />
-            <Link href="https://david-crabtree-resume-bucket.s3.amazonaws.com/sip-sales-extension-0.0.01.zip" target="_blank"><Button size="lg" isDisabled>Download Extension</Button></Link>
+            <Link href="https://chrome.google.com/webstore/detail/sip-sales-extension/imkmdeidjgpjhccbamgpchddhmmfbagg?hl=en&authuser=0" target="_blank"><Button size="lg">Install Extension</Button></Link>
             <LoginButton />
           </HStack>
           {user && <Text>Current user: {user.uid}</Text>} {/* add a conditional check for user object */}
           <Divider mt="10" mb="10"/>
           <Center>
-            <Card variant={"filled"} w="80%">
-              <CardHeader>
-                <Heading>How to Download and Install</Heading>
-              </CardHeader>
-              <CardBody>
-                <Text>1. Download the extension from the button above</Text>
-                <Text>2. Go to chrome://extensions/</Text>
-                <Text>3. Turn on developer mode</Text>
-                <Text>4. Click "Load unpacked" and select the folder you downloaded</Text>
-                <Text>5. Click the extension icon in the top right of your browser</Text>
-                <Text>6. Pin the Sip Sales Extension</Text>
-              </CardBody>
-            </Card>
           </Center>
           <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
             {deckCards}

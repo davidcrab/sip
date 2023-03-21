@@ -14,6 +14,7 @@ import { useLocation } from "react-router";
 import { getAuth } from 'firebase/auth'; // Firebase v9+
 import { getStorage } from 'firebase/storage'; // Firebase v9+
 import VendorPage from './Pages/VendorPage';
+import FlexPromo from './Pages/FlexPromo';
 
 
 export const App = () => {
@@ -40,6 +41,7 @@ const AppInner = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/flexPromo" element={<FlexPromo />} />
               <Route path="/demo" element={<MyDecks />} />
               <Route path="/view" element={<DeckPage />} />
               <Route path="/create" element={<CreateDeck />} />
