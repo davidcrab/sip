@@ -29,7 +29,10 @@
     "react-instantsearch-hooks-web": "^6.40.0",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.29.0",
     "reactfire": "^4.2.2",
+    "slick-carousel": "^1.8.1",
+    "swiper": "^9.1.1",
     "swr": "^2.0.3",
     "typesense-instantsearch-adapter": "^2.5.1",
     "web-vitals": "^2.1.4"

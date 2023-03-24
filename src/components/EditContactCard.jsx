@@ -5,12 +5,18 @@ import {
   CardBody,
   CardHeader,
   Text,
-  Link
+  Link,
+  Button,
+  Spacer,
+  HStack
 } from "@chakra-ui/react";
 import { useFirestore, useFirestoreDocData } from 'reactfire';
 import { doc } from 'firebase/firestore';
 
-const ContactCard = ({ personalNote, props }) => {
+/* 
+accept the user ID and the deck ID as props
+*/
+const EditContactCard = ({ deckId, props, personalNote }) => {
   const userRef = doc(useFirestore(), 'users', props);
   const { status: userStatus, data: userData } = useFirestoreDocData(userRef);
 
@@ -21,9 +27,13 @@ const ContactCard = ({ personalNote, props }) => {
   const emailLink = `mailto:${userData.contactEmail}`;
 
   return (
-    <Card bg="white" variant={"filled"} size="sm" p="2" w="85%" ml="8%" mr="8%">
+    <Card variant={"filled"} size="sm" p="2" w="85%" ml="8%" mr="8%">
       <CardHeader>
-      {personalNote}
+        <HStack>
+          {personalNote && <Text>{personalNote}</Text>}
+          <Spacer />
+          <Button colorScheme={"cyan"}>Edit</Button>
+        </HStack>
       </CardHeader>
       <CardBody>
         <Heading as="h3" size="md">
@@ -37,4 +47,4 @@ const ContactCard = ({ personalNote, props }) => {
   );
 }
 
-export default ContactCard;
+export default EditContactCard;

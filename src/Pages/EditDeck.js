@@ -38,13 +38,15 @@ import {
   FormLabel,
   Center
 } from "@chakra-ui/react"
-import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, getDoc, deleteField } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp } from "reactfire";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import {CheckIcon, CloseIcon, ExternalLinkIcon} from '@chakra-ui/icons'
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import Mockup from "./ProductEditor";
+import AddProductModal from "../components/AddProduct";
+import EditContactCard from "../components/EditContactCard";
 
 async function UpdateName(field, value, deckId) {
   const db = getFirestore();
@@ -139,14 +141,30 @@ const EditProduct = ({ product, productIndex, deckId }) => {
   if (product.name.includes(product.id)) {
     product.name = product.name.replace(product.id, "")
   }
+  
+  async function removeProduct() {
+    const db = getFirestore();
+    const docRef = doc(db, "decks", deckId);
+    let productField = "products." + productIndex
+    console.log(productField)
+    await updateDoc(docRef, {
+      [productField]: deleteField()
+    });
+    window.location.reload();
+  }
+
   return (
     <Card size="lg" minHeight="200px" m="10">
       <CardHeader>
         <HStack>
-          <EditField field="name" value={product.name} productIndex={product.id} deckId={deckId}/>
+          <VStack>
+            <EditField field="name" value={product.name} productIndex={product.id} deckId={deckId}/>
+            <Text>{product.id}</Text>
+          </VStack>
           <Spacer />
           <strong>Sort #</strong>
           <EditField field="index" value={product.index} productIndex={product.id} deckId={deckId}/>
+          <Button colorScheme={"red"} onClick={removeProduct}>Remove</Button>
         </HStack>
       </CardHeader>
       <CardBody minHeight="200px" pt="0">
@@ -239,13 +257,14 @@ const Deck = () => {
         <HStack m="5" mt={"0"}>
           <EditField field="name" value={deck.name} deckId={deckId}/>
           <Spacer />
+          <AddProductModal deckId={deckId}/>
           <Button onClick={() => window.location.reload()} colorScheme={"blue"}>Refresh Products</Button>
           <Link m="5" target="_blank" href={"/view/" + deckId}>
               <Button colorScheme='gray'>Preview<ExternalLinkIcon mx='2px'/></Button>
           </Link>
         </HStack>
+        <EditContactCard deckId={deckId} props={data.userId} personalNote={data.personalNote}/>
         <Divider />
-        <AddProduct deckId={deckId}/>
         {productsArray.map((product, index) => (
           <EditProduct product={product} productIndex={product.id} deckId={deckId}/>
         ))}
@@ -253,120 +272,6 @@ const Deck = () => {
     );
   }
 };
-
-/* 
-Add a product to the deck
-Products = [ 
-  id: {
-      descriptions: ""
-      id: ""
-      image: ""
-      name: ""
-      notes: []
-      pricing: ""
-  }
-]
-*/
-
-
-// TODO: we hide the product id if its in the name. So we should create our own id for the product 
-const AddProduct = ({ deckId }) => {
-  const [product, setProduct] = useState({
-    descriptions: "",
-    id: "",
-    image: "",
-    name: "",
-    notes: [""],
-    pricing: ""
-   // pricingTable: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const db = getFirestore();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    // generate a random id for the product
-    product.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
-    const docRef = doc(db, 'decks', deckId);
-    let field = "products." + product.id;
-    updateDoc(docRef, {
-      [field]: product
-    }).then(() => {
-      setLoading(false);
-      setProduct({
-        descriptions: "",
-        id: "",
-        image: "",
-        name: "",
-        notes: [""],
-        pricing: ""
-        // pricingTable: "",
-      });
-    }).catch((error) => {
-      setError(error.message);
-      setLoading(false);
-    });
-  };
-
-  const handleChange = (e) => {
-    setProduct({
-      ...product,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  return (
-    <Center>
-      <Box w="60%" textAlign={"center"} align="center">
-        <form onSubmit={handleSubmit}>
-          <VStack>
-            <Heading size="lg">Add Product</Heading>
-            <FormControl id="name" isRequired>
-              <FormLabel>Name</FormLabel>
-              <Input type="text" name="name" value={product.name} onChange={handleChange} />
-            </FormControl>
-            {/* <FormControl id="id" isRequired>
-              <FormLabel>Product ID</FormLabel>
-              <Input type="text" name="id" value={product.id} onChange={handleChange} />
-            </FormControl> */}
-            <FormControl id="image" isRequired>
-              <FormLabel>Image URL</FormLabel>
-              <Input type="text" name="image" value={product.image} onChange={handleChange} />
-            </FormControl>
-            <FormControl id="descriptions">
-              <FormLabel>Descriptions (Each bullet point must start with a dash: -)</FormLabel>
-              <Textarea type="text" name="descriptions" value={product.descriptions} onChange={handleChange} />
-            </FormControl>
-            <FormControl id="pricing">
-              <FormLabel>Pricing (Each bullet point must start with a dash: -)</FormLabel>
-              <Input type="text" name="pricing" value={product.pricing} onChange={handleChange} />
-            </FormControl>
-            {/* <FormControl id="pricingTable" isRequired>
-              <FormLabel>Pricing Table</FormLabel>
-              <Textarea type="text" name="pricingTable" value={product.pricingTable} onChange={handleChange} />
-            </FormControl> */}
-            {/* <FormControl id="notes" isRequired>
-              <FormLabel>Notes</FormLabel>
-              <Textarea type="text" name="notes" value={[product.notes]} onChange={handleChange} />
-            </FormControl> */}
-            <Button type="submit" colorScheme="blue" isLoading={loading}>Add Product</Button>
-            {error && <p>{error}</p>}
-          </VStack>
-        </form>
-      </Box>
-
-    </Center>
-  );
-};
-
-
 
 const EditDeck = () => {
   const firestoreInstance = getFirestore(useFirebaseApp());
