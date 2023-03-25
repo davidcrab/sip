@@ -1,28 +1,20 @@
 import React from 'react';
-import { Heading, Text, Box, Image, Flex, Card, CardHeader, CardBody, HStack, VStack, Spacer } from '@chakra-ui/react';
+import { Heading, Image, Card, CardBody, VStack } from '@chakra-ui/react';
 
 const FocusSwiperProductCard = ({ product }) => {
-  /*
-  background color as prop 
-  image - rounded corners
-  product name 
-  one setence deiscription
-  */
-  console.log(product)
   return (
-    <Card maxW='400' minW="sm" minH="sm"  variant={"filled"} borderRadius='xl' bg="purple.100">
+    <Card maxW='400' minW={['100px', '150px', '200px']} minH="sm"  variant={"filled"} borderRadius='xl' bg="purple.100" borderColor="purple.200" borderWidth={"2px"}>
       <CardBody align="center">
         <Image
           src={product.customImage ? product.customImage : product.image}
           alt='Product Name'
           borderRadius='lg'
           objectFit='cover'
-          h='300px'
+          h={['200px', '250px', '250px']}
           align="center"
         />
         <VStack mt="4" align="left" justify={"left"} textAlign="left" w="full">
           <Heading as='h3' size='md'>{product.name}</Heading>
-          <Text>One sentence describing the product</Text>
         </VStack>
       </CardBody>
     </Card>
@@ -30,27 +22,19 @@ const FocusSwiperProductCard = ({ product }) => {
 };
 
 const SwiperProductCard = ({ product }) => {
-  /*
-  background color as prop 
-  image - rounded corners
-  product name 
-  one setence deiscription
-  */
-  console.log(product)
     return (
-      <Card maxW='300' minW="sm" minH="sm" maxH="350px" variant={"filled"} borderRadius='xl' bg="purple.100">
+      <Card maxW='300' minW={['100px', '150px', '150px']} maxH={['100px', '350px', "350px"]} variant={"filled"} borderRadius='xl' bg="purple.50" borderColor="purple.100" borderWidth={"2px"}>
         <CardBody align="center">
           <Image
             src={product.customImage ? product.customImage : product.image}
             alt='Product Name'
             borderRadius='lg'
             objectFit='cover'
-            h='250px'
+            h={['100px', '150px', '200px']}
             align="center"
           />
           <VStack mt="4" align="left" justify={"left"} textAlign="left" w="full">
             <Heading as='h3' size='md'>{product.name}</Heading>
-            <Text>One sentence describing the product</Text>
           </VStack>
         </CardBody>
       </Card>

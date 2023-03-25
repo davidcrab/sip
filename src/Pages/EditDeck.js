@@ -264,7 +264,7 @@ const Deck = () => {
           </Link>
         </HStack>
         <EditContactCard deckId={deckId} props={data.userId} personalNote={data.personalNote}/>
-        <Divider />
+        <Spacer />
         {productsArray.map((product, index) => (
           <EditProduct product={product} productIndex={product.id} deckId={deckId}/>
         ))}

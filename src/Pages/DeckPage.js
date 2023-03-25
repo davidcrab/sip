@@ -48,7 +48,7 @@ const DeckHeader = (data) => {
     <Box m="0">
       <VStack justify="center" m="0">
         <HStack w={"95%"} m="5">
-          <Heading>Let's pick your perfect merchandise, together.</Heading>
+          <Heading>Let's discover your perfect merchandise, together.</Heading>
           {/* <Heading size="xl">{data.data}</Heading> */}
         </HStack>
       </VStack>
