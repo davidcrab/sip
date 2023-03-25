@@ -10,7 +10,7 @@ import {
 import { useFirestore, useFirestoreDocData } from 'reactfire';
 import { doc } from 'firebase/firestore';
 
-const ContactCard = ({ props }) => {
+const ContactCard = ({ personalNote, props }) => {
   const userRef = doc(useFirestore(), 'users', props);
   const { status: userStatus, data: userData } = useFirestoreDocData(userRef);
 
@@ -21,9 +21,9 @@ const ContactCard = ({ props }) => {
   const emailLink = `mailto:${userData.contactEmail}`;
 
   return (
-    <Card bg="white" variant={"filled"} size="sm" p="2">
+    <Card bg="white" variant={"filled"} size="sm" p="2" w="85%" ml="8%" mr="8%">
       <CardHeader>
-        Please reach out to me at any of the following
+      {personalNote}
       </CardHeader>
       <CardBody>
         <Heading as="h3" size="md">

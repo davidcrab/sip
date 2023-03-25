@@ -39,6 +39,8 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import { useCallback, useEffect } from 'react';
 import ContactCard from "../components/ContactCard";
+import ProductCarousel from '../components/ProductCarousel';
+
 
 const DeckHeader = (data) => {
   console.log("Header", data)
@@ -46,21 +48,9 @@ const DeckHeader = (data) => {
     <Box m="0">
       <VStack justify="center" m="0">
         <HStack w={"95%"} m="5">
-          <Heading size="xl">{data.data}</Heading>
-          <Spacer />
-          <Popover>
-            <PopoverTrigger>
-              <Button>Contact Me</Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverCloseButton />
-              <PopoverHeader>Contact Me!</PopoverHeader>
-              <PopoverBody><ContactCard props={data.props} /></PopoverBody>
-            </PopoverContent>
-          </Popover>
+          <Heading>Let's discover your perfect merchandise, together.</Heading>
+          {/* <Heading size="xl">{data.data}</Heading> */}
         </HStack>
-       
       </VStack>
     </Box>
   )
@@ -163,34 +153,11 @@ const SalesDeck = () => {
   let productsArray = Object.values(data.products)
   productsArray.sort((a, b) => (a.index > b.index) ? 1 : -1)
 
-  const ImageBox = () => {
-    let images = productsArray.map(product => {
-      // if product.customImage exists, use that, otherwise use the product.image
-      return product.customImage ? product.customImage : product.image
-    })
-    // for each image in the images array, create an image with the height and width of the random size
-    let imagesArray = images.map(image => {
-      // generate a random size for the image
-      let sizes = Math.floor(Math.random() * 175) + 90
-
-      return <Image src={image} w={sizes} h={sizes} />
-    })
-
-    return (
-      <Center>
-        <Box w="85%" bg="white" p="20" borderRadius="lg" overflow={'auto'}>
-          <HStack align="flex" justify="space-around" w="full">
-            {imagesArray}
-          </HStack>
-        </Box>
-      </Center>
-    )
-  }
-
   return (
     <Box margin="" h="100%" bg="#f8f8f8">
       <DeckHeader data={data.name} date={data.date} props={data.userId} />
-      <ImageBox />
+      <ProductCarousel products={productsArray} />
+      <ContactCard personalNote={data.personalNote} props={data.userId}/>
       <Wrap spacing="30px" justify="center" align="center" p="10" bg="#f8f8f8">
         {productsArray.map((productMap, index) => (
           <WrapItem>
@@ -198,7 +165,6 @@ const SalesDeck = () => {
           </WrapItem>
         ))}
       </Wrap>
-      <ContactCard props={data.userId} mb="100px"/>
     </Box>
   )
 }
@@ -219,7 +185,7 @@ const DeckPage = () => {
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
-          <SalesDeck bg="#f8f8f8"/>
+        <SalesDeck bg="#f8f8f8"/>
       </ChakraProvider>
     </FirestoreProvider>
   );
