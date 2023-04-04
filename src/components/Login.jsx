@@ -20,7 +20,9 @@ const LoginButton = () => {
     const details = {
       email: user.email,
       name: user.displayName,
-      hasAccessToken: false
+      company: "Company Placeholder",
+      contactEmail: "Email placeholder",
+      phone: "Phone placeholder",
     };
     setDoc(doc(firestoreInstance, "users", user.uid), details)
     return {user, details};
