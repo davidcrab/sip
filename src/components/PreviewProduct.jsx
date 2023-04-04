@@ -6,7 +6,8 @@ import {
   Spacer,
   Button,
   VStack,
-  Center
+  Center,
+  Divider
 } from "@chakra-ui/react";
 import EditProduct from "./EditProduct";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
@@ -29,11 +30,19 @@ const PreviewProduct = ({ product, deckId, productId }) => {
       </CardHeader>
       <CardBody>
         <Image src={product.image} />
+        <div>
+            <div className="content" dangerouslySetInnerHTML={{__html: product.pricingTable}}></div>
+        </div>
+        {/* Map the product details array */}
+        <Divider m="3" />
+        {product.details.map((detail, index) => (
+          <p key={index}>{detail}</p>
+        ))}
       </CardBody>
       <Center>
-        <VStack w="70%">
+        <VStack w="70%" mb="10">
           <EditProduct product={product} deckId={deckId} productId={productId} />
-          <Button colorScheme={"red"} onClick={removeProduct} w="full">Remove</Button>
+          <Button colorScheme={"red"} onClick={removeProduct} w="full" mb="10">Remove</Button>
         </VStack>
       </Center>
     </Card>
