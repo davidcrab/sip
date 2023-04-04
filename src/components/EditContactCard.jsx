@@ -57,7 +57,7 @@ const EditContactCard = ({ deckId, props, personalNote }) => {
     return (
       <Card variant={"filled"} size="sm" p="2" w="85%" ml="8%" mr="8%">
         <HStack>
-          <Editable defaultValue={note} w="80%">
+          <Editable defaultValue={note} w="80%" placeholder="Add Personal Note">
             <Tooltip label="Click to edit your personal note">
               <EditablePreview />
             </Tooltip>

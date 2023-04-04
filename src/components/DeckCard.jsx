@@ -68,7 +68,7 @@ const DeckCard = ({deck}) => {
               </>
             )}
           </Menu>
-          {/* <small>Created by: {deck.userId}</small> */}
+          <Text pt='2' fontSize='sm'>{deck.version ? deck.version : "Version 1.0"}</Text>
         </VStack>
       </CardFooter>
     </Card>
