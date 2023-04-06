@@ -190,10 +190,7 @@ const SalesDeck = () => {
 
   // if the userId, then this is me and I should have admin permission to view all ve2Q2aQj2ga4YJGcSwuvkSUi4R73
   let productsQuery = query(collection(useFirestore(), "showcaseProduct"), where("deckId", "==", projectId));
-  
   const { status: productsStatus, data: products } = useFirestoreCollectionData(productsQuery, { idField: "id" })
-
-  console.log('products', products);
 
 
   // easily check the loading status
@@ -202,13 +199,10 @@ const SalesDeck = () => {
   }
   
   let productsArray = [];
-  console.log(data.version)
   if (data.version !== '1.1') {
-    console.log("Version is not 1.1")
     productsArray = Object.values(data.products);
     productsArray.sort((a, b) => (a.index > b.index ? 1 : -1));
   } else {
-    console.log("Version is 1.1")
     productsArray = products;
   }
 

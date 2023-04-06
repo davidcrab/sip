@@ -29,7 +29,8 @@ const PreviewProduct = ({ product, deckId, productId }) => {
         {product.name}
       </CardHeader>
       <CardBody>
-        <Image src={product.image} />
+        {/* if there is a custom image, use it, otherwise use the default image */}
+        <Image src={product.customImage ? product.customImage : product.image} />
         <div>
             <div className="content" dangerouslySetInnerHTML={{__html: product.pricingTable}}></div>
         </div>

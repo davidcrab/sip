@@ -26,6 +26,7 @@ import {
 import { useState } from 'react';
 import { useFirestore, useFirestoreDocData } from 'reactfire';
 import { doc, updateDoc, getFirestore  } from 'firebase/firestore';
+import Mockup from '../Pages/ProductEditor'
 
 const EditProduct = ({product, deckId, productId}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -70,7 +71,9 @@ const EditProduct = ({product, deckId, productId}) => {
         <ModalCloseButton />
         <ModalBody>
           <Center>
-            <Image src={product.image} />
+            <Mockup src={product.image} deckId={deckId} productId={productId} 
+              // if product.customImage is not null, use that, otherwise use product.image
+              customImage={product.customImage ? product.customImage : ""}/>
           </Center>
             <Heading as="h2" size="lg">About</Heading>
             {/* map descriptions in eidtable text areas */}

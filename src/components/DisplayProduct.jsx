@@ -31,7 +31,7 @@ const DisplayProduct = ({ product }) => {
           {product.name}
         </CardHeader>
         <CardBody>
-          <Image src={product.image} />
+        <Image src={product.customImage ? product.customImage : product.image} />
         </CardBody>
       </Card>
 
@@ -42,7 +42,7 @@ const DisplayProduct = ({ product }) => {
           <ModalCloseButton />
           <ModalBody>
             <Center>
-              <Image src={product.image} />
+              <Image src={product.customImage ? product.customImage : product.image} />
             </Center>
               <Heading as="h2" size="lg">About</Heading>
               <UnorderedList>
