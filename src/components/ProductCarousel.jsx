@@ -13,10 +13,14 @@ const ProductCarousel = (products) => {
     setCurrentProduct(currentProduct === 0 ? products.products.length - 1 : currentProduct - 1);
   };
 
+  console.log(products);
+
+  // this only works if its an array of products
+  if (!products.products || products.products.length === 0) return <p>No products, sorry</p>;
+
   return (
     <Center>
     <Box m="8">
-     
         <HStack align="space-between" justify={"space-between"} w="full">
           {/* display a last product card when the current product is zero. display the prev when its not zero */}
           {/* Should only display this when the screen size is md or larger */}

@@ -33,10 +33,10 @@ function dataURItoBlob(dataURI) {
 /* Update the product image in the database */
 const updateProductImage = (deckId, productId, image) => {
   const db = getFirestore();
-  const deckRef = doc(db, "decks", deckId);
-  let field = "products." + productId + ".customImage"
+  const deckRef = doc(db, "showcaseProduct", productId);
+
   updateDoc(deckRef, {
-    [field]: image,
+    customImage: image,
   });
 }
 

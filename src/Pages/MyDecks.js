@@ -16,17 +16,26 @@ import {
   CardFooter,
   Divider,
   Link,
-  Tooltip
+  Tooltip,
+  Badge,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  VStack
 } from '@chakra-ui/react';
 import Draggable,  {DraggableCore}  from 'react-draggable'; // Both at the same time
 import useSWR from 'swr'
 import { FirestoreProvider, useFirestoreCollectionData, useFirebaseApp, useUser } from 'reactfire';
-import { doc, getFirestore, query, collection, where } from 'firebase/firestore';
+import { doc, getFirestore, query, collection, where, updateDoc } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router';
 import trackPathForAnalytics from '../TrackPathForAnalytics';
 import { useCallback, useEffect } from 'react';
 import LoginButton from '../components/Login';
 import Mockup from './ProductEditor';
+import DeckCard from '../components/DeckCard';
+
+/* update deck component... this will */
 
 function MyDecks() {
   const { status: userStatus, data: user } = useUser();
@@ -41,7 +50,6 @@ function MyDecks() {
   }, [analytics]);
 
  const firestoreInstance = getFirestore(useFirebaseApp());
- const navigate = useNavigate()
 
  // query the decks with the user id
  let decksquery = user ? query(
@@ -69,33 +77,6 @@ function MyDecks() {
   }
 
   console.log("user", user)
-
-  const onClick = (id) => {
-    console.log("Clicked on " + id)
-    navigate(`/edit/` + id)
-  }
-
-  const deckCards = decks.map(deck => (
-      <Card>
-        <Tooltip hasArrow placement='top' label="Click to Edit" aria-label="Edit Deck">
-          <CardBody onClick={() => onClick(deck.id)}>
-            <Box>
-              <Heading size='xs' textTransform='uppercase'>
-                {deck.name}
-              </Heading>
-              <Text pt='2' fontSize='sm'>
-              {deck.date}
-              </Text>
-            </Box>
-          </CardBody>
-        </Tooltip>
-        <Divider />
-        <CardFooter w="full">
-            <Button as="a" w="full" size="lg" colorScheme='gray' target="_blank" href={"/view/" + deck.id}>Preview</Button>
-        </CardFooter>
-      </Card>
-  ))
-
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
@@ -108,10 +89,51 @@ function MyDecks() {
           </HStack>
           {user && <Text>Current user: {user.uid}</Text>} {/* add a conditional check for user object */}
           <Divider mt="10" mb="10"/>
-          <Center>
-          </Center>
+          <HStack align={"flex-start"} justify="space-evenly" w="full">
+            <VStack bg="orange.50" p="30px" rounded="xl">
+                <Heading>No Status</Heading>
+                <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
+                  { /* map over the decks and display them */ }
+                  {decks.map((deck) => (
+                    !deck.status && <DeckCard deck={deck} />
+                  ))}
+                </SimpleGrid>
+              </VStack>
+            <VStack bg="yellow.50" p="30px" rounded="xl">
+              <Heading>Decks in Progress</Heading>
+              <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
+                { /* map over the decks and display them */ }
+                {decks.map((deck) => (
+                  deck.status && deck.status.toLowerCase() === "in progress" && <DeckCard deck={deck} />
+                ))}
+              </SimpleGrid>
+            </VStack>
+            <VStack bg="green.50" p="30px" rounded="xl">
+              <Heading>Decks Published</Heading>
+              <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10"> 
+                { /* map over the decks and display them */ }
+                {decks.map((deck) => (
+                  deck.status && deck.status.toLowerCase() === "done" && <DeckCard deck={deck} />
+                ))}
+              </SimpleGrid>
+            </VStack>
+            <VStack bg="red.50" p="30px" rounded="xl">
+              <Heading>Decks Archived</Heading>
+              <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
+                { /* map over the decks and display them */ }
+                {decks.map((deck) => (
+                  deck.status && deck.status.toLowerCase() === "archive" && <DeckCard deck={deck} />
+                ))}
+              </SimpleGrid>
+            </VStack>
+          </HStack>
+
+          <Heading>All Decks</Heading>
           <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
-            {deckCards}
+            { /* map over the decks and display them */ }
+            {decks.map((deck) => (
+              <DeckCard deck={deck} />
+            ))}
           </SimpleGrid>
         </Box>
       </ChakraProvider>

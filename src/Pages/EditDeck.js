@@ -16,15 +16,14 @@ import {
   Editable,
   Tooltip,
   EditablePreview,
-  Input,
-  EditableInput,
   useColorModeValue,
   EditableTextarea,
   VStack,
   Spacer,
   Button,
   Link,
-  Divider,
+  Wrap,
+  WrapItem,
   Textarea,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -34,12 +33,9 @@ import {
   AccordionIcon,
   AccordionPanel,
   AccordionButton,
-  FormControl,
-  FormLabel,
-  Center
 } from "@chakra-ui/react"
-import { getFirestore, doc, updateDoc, getDoc, deleteField } from "firebase/firestore";
-import { FirestoreProvider, useFirebaseApp } from "reactfire";
+import { getFirestore, doc, updateDoc, getDoc, deleteField, query, collection, where } from "firebase/firestore";
+import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreCollectionData } from "reactfire";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import {CheckIcon, CloseIcon, ExternalLinkIcon} from '@chakra-ui/icons'
@@ -47,6 +43,9 @@ import trackPathForAnalytics from '../TrackPathForAnalytics';
 import Mockup from "./ProductEditor";
 import AddProductModal from "../components/AddProduct";
 import EditContactCard from "../components/EditContactCard";
+import EditProduct from "../components/EditProduct";
+import PreviewProduct from "../components/PreviewProduct";
+import ImageUpload from "../components/UploadClientLogo";
 
 async function UpdateName(field, value, deckId) {
   const db = getFirestore();
@@ -67,9 +66,8 @@ async function UpdateProductName(field, value, deckId, productIndex) {
   });
 }
 
-const EditField = ({ field, value, productIndex, deckId }) => {
+const EditField = ({ field, value, productIndex, deckId, placeholder }) => {
 
-  console.log()
   const testChange = (event) => {
     if (productIndex || productIndex === 0) {
       console.log(productIndex)
@@ -105,7 +103,7 @@ const EditField = ({ field, value, productIndex, deckId }) => {
   let fontWeight = 'normal'
 
   if (field === 'name') {
-    fontSize = '3xl'
+    fontSize = 'md'
     fontWeight = 'bold'
   } else if (field === 'title') {
     fontSize = '5xl'
@@ -120,8 +118,9 @@ const EditField = ({ field, value, productIndex, deckId }) => {
         onSubmit={testChange}
         fontSize={fontSize}
         fontWeight={fontWeight}
+        placeholder={placeholder}
       >
-        <Tooltip label="Click to edit">
+        <Tooltip label={`Click to edit ${placeholder}`}>
           <EditablePreview
             py={5}
             px={10}
@@ -136,7 +135,8 @@ const EditField = ({ field, value, productIndex, deckId }) => {
   );
 }
 
-const EditProduct = ({ product, productIndex, deckId }) => {
+// this code should be removed and then we should say this deck is no longer editable...
+const EditProductOld = ({ product, productIndex, deckId }) => {
   // if the product id is in the product name string, remove it
   if (product.name.includes(product.id)) {
     product.name = product.name.replace(product.id, "")
@@ -227,6 +227,9 @@ const Deck = () => {
 
   const db = getFirestore();
 
+  let productsQuery = query(collection(useFirestore(), "showcaseProduct"), where("deckId", "==", deckId));
+  const { status: productsStatus, data: products } = useFirestoreCollectionData(productsQuery, { idField: "fsId" })
+
   useEffect(() => {
     const docRef = doc(db, 'decks', deckId);
     getDoc(docRef).then((doc) => {
@@ -249,13 +252,20 @@ const Deck = () => {
   } else {
     const deck = data;
     // sort the products based on their index. products is a map, so we need to convert it to an array first
-    let productsArray = Object.values(deck.products)
-    productsArray.sort((a, b) => (a.index > b.index) ? 1 : -1)
+    
+    let productsArray = []
+    if (products.length > 0) {
+      console.log("within the if", products)
+      productsArray = products
+    } else {
+      productsArray = Object.values(deck.products)
+      productsArray.sort((a, b) => (a.index > b.index) ? 1 : -1)
+    }
 
     return (
       <Box>
         <HStack m="5" mt={"0"}>
-          <EditField field="name" value={deck.name} deckId={deckId}/>
+          <EditField field="name" value={deck.name} deckId={deckId} placeholder="deck name"/>
           <Spacer />
           <AddProductModal deckId={deckId}/>
           <Button onClick={() => window.location.reload()} colorScheme={"blue"}>Refresh Products</Button>
@@ -263,11 +273,22 @@ const Deck = () => {
               <Button colorScheme='gray'>Preview<ExternalLinkIcon mx='2px'/></Button>
           </Link>
         </HStack>
-        <EditContactCard deckId={deckId} props={data.userId} personalNote={data.personalNote}/>
+        <EditField field="tagline" value={deck.tagline} deckId={deckId} placeholder="Add a title"/>
+        <HStack m="5" mt={"0"}>
+        {data.clientLogo ? <Image src={data.clientLogo} alt="client logo" w="100px" h="100px" m="5" /> : <ImageUpload deckId={deckId} />}
+        <ImageUpload deckId={deckId} />
+        </HStack>
+        <EditContactCard deckId={deckId} props={data.userId} personalNote={data.personalNote} currColor={data.color}/>
         <Spacer />
-        {productsArray.map((product, index) => (
-          <EditProduct product={product} productIndex={product.id} deckId={deckId}/>
-        ))}
+        <Wrap spacing="30px" justify="center" align="center" p="10">
+          {productsArray.map((product, index) => (
+            <>
+            <WrapItem>
+            {data.version === "1.1" ? <PreviewProduct product={product} deckId={deckId} productId={product.fsId} /> : <EditProductOld product={product} deckId={deckId} productIndex={index}/>}
+            </WrapItem>
+            </>
+          ))}
+        </Wrap>
     </Box>
     );
   }
