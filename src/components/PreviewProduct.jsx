@@ -42,6 +42,7 @@ const PreviewProduct = ({ product, deckId, productId }) => {
       </CardBody>
       <Center>
         <VStack w="70%" mb="10">
+        <Button as="a" colorScheme='gray' target="_blank" href={product.url}>Suppliers Product Page</Button>
           <EditProduct product={product} deckId={deckId} productId={productId} />
           <Button colorScheme={"red"} onClick={removeProduct} w="full" mb="10">Remove</Button>
         </VStack>
