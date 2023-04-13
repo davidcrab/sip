@@ -202,15 +202,13 @@ const SalesDeck = () => {
       <ContactCard personalNote={data.personalNote} props={data.userId} color={data.color} />
       <Spacer mt="75px"/>
       <DisplayProductsRow products={productsArray} />
-      <Wrap spacing="30px" justify="center" align="center" p="10" bg="#f8f8f8">
+      {/* <Wrap spacing="30px" justify="center" align="center" p="10" bg="#f8f8f8">
         {productsArray.map((productMap, index) => (
           <WrapItem>
-            {/* if version is 1.1, use DisplayProduct else use Product */}
             {data.version === '1.1' ? <DisplayProduct product={productMap} key={index} /> : <Product product={productMap} key={index} />}
-            {/* <Product product={productMap} key={index} /> */}
           </WrapItem>
         ))}
-      </Wrap>
+      </Wrap> */}
     </Box>
   );
 };
