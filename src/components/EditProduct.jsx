@@ -113,13 +113,13 @@ const EditProduct = ({product, deckId, productId}) => {
                   <EditableTextarea onChange={(event) => handleDescriptionChange(event, index)} />
                 </Editable>
               ))}
-              <HStack>
+              {/* <HStack>
                 <Editable defaultValue={""} placeholder="Add a description">
                     <EditablePreview />
                     <EditableTextarea onChange={handleTempDescChange} />
                 </Editable>
                 <Button onClick={handleNewDesc}>Add Description</Button>
-              </HStack>
+              </HStack> */}
             </UnorderedList>
             <Heading as="h2" size="lg">Pricing</Heading>
             <Editable defaultValue={product.pricing} placeholder="Add your pricing seperated by '-'">
