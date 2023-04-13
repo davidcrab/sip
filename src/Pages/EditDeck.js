@@ -16,15 +16,12 @@ import {
   Editable,
   Tooltip,
   EditablePreview,
-  Input,
-  EditableInput,
   useColorModeValue,
   EditableTextarea,
   VStack,
   Spacer,
   Button,
   Link,
-  Divider,
   Wrap,
   WrapItem,
   Textarea,
@@ -36,9 +33,6 @@ import {
   AccordionIcon,
   AccordionPanel,
   AccordionButton,
-  FormControl,
-  FormLabel,
-  Center
 } from "@chakra-ui/react"
 import { getFirestore, doc, updateDoc, getDoc, deleteField, query, collection, where } from "firebase/firestore";
 import { FirestoreProvider, useFirebaseApp, useFirestore, useFirestoreCollectionData } from "reactfire";
@@ -51,6 +45,7 @@ import AddProductModal from "../components/AddProduct";
 import EditContactCard from "../components/EditContactCard";
 import EditProduct from "../components/EditProduct";
 import PreviewProduct from "../components/PreviewProduct";
+import ImageUpload from "../components/UploadClientLogo";
 
 async function UpdateName(field, value, deckId) {
   const db = getFirestore();
@@ -71,9 +66,8 @@ async function UpdateProductName(field, value, deckId, productIndex) {
   });
 }
 
-const EditField = ({ field, value, productIndex, deckId }) => {
+const EditField = ({ field, value, productIndex, deckId, placeholder }) => {
 
-  console.log()
   const testChange = (event) => {
     if (productIndex || productIndex === 0) {
       console.log(productIndex)
@@ -109,7 +103,7 @@ const EditField = ({ field, value, productIndex, deckId }) => {
   let fontWeight = 'normal'
 
   if (field === 'name') {
-    fontSize = '3xl'
+    fontSize = 'md'
     fontWeight = 'bold'
   } else if (field === 'title') {
     fontSize = '5xl'
@@ -124,8 +118,9 @@ const EditField = ({ field, value, productIndex, deckId }) => {
         onSubmit={testChange}
         fontSize={fontSize}
         fontWeight={fontWeight}
+        placeholder={placeholder}
       >
-        <Tooltip label="Click to edit">
+        <Tooltip label={`Click to edit ${placeholder}`}>
           <EditablePreview
             py={5}
             px={10}
@@ -270,7 +265,7 @@ const Deck = () => {
     return (
       <Box>
         <HStack m="5" mt={"0"}>
-          <EditField field="name" value={deck.name} deckId={deckId}/>
+          <EditField field="name" value={deck.name} deckId={deckId} placeholder="deck name"/>
           <Spacer />
           <AddProductModal deckId={deckId}/>
           <Button onClick={() => window.location.reload()} colorScheme={"blue"}>Refresh Products</Button>
@@ -278,7 +273,12 @@ const Deck = () => {
               <Button colorScheme='gray'>Preview<ExternalLinkIcon mx='2px'/></Button>
           </Link>
         </HStack>
-        <EditContactCard deckId={deckId} props={data.userId} personalNote={data.personalNote}/>
+        <EditField field="tagline" value={deck.tagline} deckId={deckId} placeholder="Add a title"/>
+        <HStack m="5" mt={"0"}>
+        {data.clientLogo ? <Image src={data.clientLogo} alt="client logo" w="100px" h="100px" m="5" /> : <ImageUpload deckId={deckId} />}
+        <ImageUpload deckId={deckId} />
+        </HStack>
+        <EditContactCard deckId={deckId} props={data.userId} personalNote={data.personalNote} currColor={data.color}/>
         <Spacer />
         <Wrap spacing="30px" justify="center" align="center" p="10">
           {productsArray.map((product, index) => (

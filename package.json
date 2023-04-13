@@ -19,6 +19,7 @@
     "html-to-image": "^1.11.11",
     "re-resizable": "^6.9.9",
     "react": "^18.2.0",
+    "react-color": "^2.19.3",
     "react-component-export-image": "^1.0.6",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

@@ -20,6 +20,7 @@ import {
   AccordionIcon,
   AccordionPanel,
   AccordionButton,
+  Flex,
   Divider,
   Center,
   Button,
@@ -46,17 +47,20 @@ import { useCallback, useEffect } from 'react';
 import ContactCard from '../components/ContactCard';
 import ProductCarousel from '../components/ProductCarousel';
 import DisplayProduct from '../components/DisplayProduct';
+import DisplayProductsRow from '../components/DisplayProductRow';
+import ImagesDisplay from '../components/ImageDisplay';
 
 const DeckHeader = data => {
   console.log('Header', data);
+  /*have the header be sticky */
   return (
-    <Box m="0">
-      <VStack justify="center" m="0">
-        <HStack w={'95%'} m="5">
-          <Heading>Let's discover your perfect merchandise, together.</Heading>
-          {/* <Heading size="xl">{data.data}</Heading> */}
-        </HStack>
-      </VStack>
+    <Box m="0" position="sticky" top="0" zIndex="sticky" bg="gray.50">
+        {/* <Image ml="85%" w="100px" src={"https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1495074912/n7q6etrr2svn5tkqn1zu.jpg"} /> */}
+        <Flex p="8" pt="0" pb="0" align="center">
+          <Heading>{data.tagline}</Heading>
+          <Spacer />
+          <Image w="100px" src={data.clientLogo} alt="cleint logo" />
+        </Flex>
     </Box>
   );
 };
@@ -157,27 +161,6 @@ const Product = product => {
   );
 };
 
-
-
-// this is in progress, not sure what im doing thooo
-/*
-const VersionOne = () => {
-  return (
-    <>
-    <ProductCarousel products={productsArray} />
-    <ContactCard personalNote={data.personalNote} props={data.userId} />
-    <Wrap spacing="30px" justify="center" align="center" p="10" bg="#f8f8f8">
-      {productsArray.map((productMap, index) => (
-        <WrapItem>
-          <Product product={productMap} key={index} />
-        </WrapItem>
-      ))}
-    </Wrap>
-    </>
-  )
-}*/
-
-
 const SalesDeck = () => {
   const { id: projectId } = useParams();
   const [ version, setVersion] = React.useState('1.1');
@@ -204,16 +187,21 @@ const SalesDeck = () => {
     productsArray.sort((a, b) => (a.index > b.index ? 1 : -1));
   } else {
     productsArray = products;
+    
   }
 
   // i need to query the products colle
 
   return (
     <Box margin="" h="100%" bg="#f8f8f8">
-      {data.version === '1.1' && <Text>Version 1.1</Text>}
-      <DeckHeader data={data.name} date={data.date} props={data.userId} />
+      <DeckHeader data={data.name} tagline={data.tagline} date={data.date} props={data.userId} clientLogo={data.clientLogo} />
+      <ImagesDisplay products={productsArray} />
+      
       <ProductCarousel products={productsArray} />
-      <ContactCard personalNote={data.personalNote} props={data.userId} />
+      <Spacer mt="75px"/>
+      <ContactCard personalNote={data.personalNote} props={data.userId} color={data.color} />
+      <Spacer mt="75px"/>
+      <DisplayProductsRow products={productsArray} />
       <Wrap spacing="30px" justify="center" align="center" p="10" bg="#f8f8f8">
         {productsArray.map((productMap, index) => (
           <WrapItem>
