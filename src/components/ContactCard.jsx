@@ -25,7 +25,7 @@ const ContactCard = ({ personalNote, props, color }) => {
   const emailLink = `mailto:${userData.contactEmail}`;
 
   return (
-    <Card color="white" variant={"filled"} size="sm" p="2" w="85%" ml="8%" mr="8%" bg={color} rounded="2xl">
+    <Card color="white" variant={"filled"} size="sm" p="2" w="85%" ml="8%" mr="8%" bg={"#11284a"} rounded="2xl">
       <CardBody ml="10">
         <Text>{personalNote}</Text>
       </CardBody>

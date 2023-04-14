@@ -54,7 +54,7 @@ const DeckHeader = data => {
   console.log('Header', data);
   /*have the header be sticky */
   return (
-    <Box m="0" position="sticky" top="0" zIndex="sticky" bg="gray.50">
+    <Box m="0" position="sticky" top="0" zIndex="sticky" bg="#11284a" color="white">
         {/* <Image ml="85%" w="100px" src={"https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1495074912/n7q6etrr2svn5tkqn1zu.jpg"} /> */}
         <Flex p="8" pt="0" pb="0" align="center">
           <Heading>{data.tagline}</Heading>
@@ -195,7 +195,7 @@ const SalesDeck = () => {
   return (
     <Box margin="" h="100%" bg="#f8f8f8">
       <DeckHeader data={data.name} tagline={data.tagline} date={data.date} props={data.userId} clientLogo={data.clientLogo} />
-      <ImagesDisplay products={productsArray} />
+      {/* <ImagesDisplay products={productsArray} /> */}
       
       <ProductCarousel products={productsArray} />
       <Spacer mt="75px"/>
