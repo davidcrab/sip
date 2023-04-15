@@ -89,13 +89,13 @@ const LoginButton = () => {
   if (signInCheckResult.signedIn === true) {
     return (
       <ChakraProvider theme={theme}>
-        <Button size='lg' onClick={() => SignOut()}>Sign Out</Button>
+        <Button size='md' onClick={() => SignOut()}>Sign Out</Button>
       </ChakraProvider>
     )
   } else {
     return (
       <ChakraProvider theme={theme}>
-        <Button size='lg' colorScheme='blue' onClick={() => onClick()}>Sign in</Button>
+        <Button size='md' colorScheme='blue' onClick={() => onClick()}>Sign in</Button>
       </ChakraProvider>
     );
   }
