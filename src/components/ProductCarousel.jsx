@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Center, HStack } from '@chakra-ui/react';
+import { Box, Button, Center, HStack, Spacer, VStack } from '@chakra-ui/react';
 import { FocusSwiperProductCard, SwiperProductCard } from './SwiperProductCard';
 
 const ProductCarousel = (products) => {
@@ -29,11 +29,14 @@ const ProductCarousel = (products) => {
             {currentProduct !== 0 && <SwiperProductCard product={products.products[currentProduct - 1]} />}
           </Box>
           {/* display the current product card */}
-          <HStack>
-            <Button onClick={prevProduct}>Back</Button>
+          {/* Modify the above code to display the back and next button below the product card on mobile screens */}
+          <VStack>
             <FocusSwiperProductCard product={products.products[currentProduct]} />
-            <Button onClick={nextProduct}>Next</Button>
-          </HStack>
+            <HStack>
+              <Button onClick={prevProduct}>Back</Button>
+              <Button onClick={nextProduct}>Next</Button>
+            </HStack>
+          </VStack>
         
           <Box display={{ base: "none", md: "block" }}>
             {/* display a first product card when the current product is the last product. display the next when its not the last product */}

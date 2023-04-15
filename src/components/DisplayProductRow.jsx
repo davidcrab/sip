@@ -13,6 +13,27 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 
+const ProductDetails = ({ product }) => {
+
+  return (
+    <VStack h="full">
+      <Heading as="h4" size="lg">
+        {product.name}
+      </Heading>
+      <Spacer />
+      <UnorderedList pl="10px">
+        {product.descriptions.map((description) => {
+          return ( 
+            <div>
+              <ListItem>{description}</ListItem>
+            </div>
+          )
+        })}
+      </UnorderedList>
+    </VStack>
+  )
+}
+
 const DisplayProductLeft = ({ product }) => {
 
   let displayArray = []
@@ -29,24 +50,15 @@ const DisplayProductLeft = ({ product }) => {
       <HStack>
         <Image h="300px" src={product.customImage ? product.customImage : product.image} rounded="2xl" />
         <Spacer />
-        <VStack h="full" align={"flex-start"} center="flex-start">
-          <Heading as="h4" size="lg">
-            {product.name}
-          </Heading>
-          <Spacer />
-          <UnorderedList>
-            {product.descriptions.map((description) => {
-              return ( 
-                <div>
-                  <ListItem>{description}</ListItem>
-                </div>
-              )
-            })}
-          </UnorderedList>
-        </VStack>
+        <Box display={["none", "block", "block"]}>
+          <ProductDetails product={product} />
+        </Box>
         <Spacer />
         {/* map the images array and display each image */}
       </HStack>
+      <Box display={["block", "none", "none"]}>
+        <ProductDetails product={product} />
+      </Box>
       {/* <HStack overflow="auto">
         {displayArray.map((image) => {
           return (
