@@ -37,6 +37,22 @@ import DeckCard from '../components/DeckCard';
 
 /* update deck component... this will */
 
+function StatusColumn({status, decks}) {
+  return (
+    <VStack >
+      <Heading size="sm">{status}</Heading>
+      <VStack bg="gray.50" rounded="xl">
+        <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' p="4">
+          { /* map over the decks and display them */ }
+          {decks.map((deck) => (
+            <DeckCard deck={deck} />
+          ))}
+        </SimpleGrid>
+      </VStack>
+    </VStack>
+  )
+}
+
 function MyDecks() {
   const { status: userStatus, data: user } = useUser();
   const { pathname, search } = useLocation();
@@ -76,58 +92,29 @@ function MyDecks() {
     )
   }
 
-  console.log("user", user)
+  const noStatus = decks.filter(deck => !deck.status)
+  const inProgress = decks.filter(deck => deck.status && deck.status.toLowerCase() === "in progress")
+  const published = decks.filter(deck => deck.status && deck.status.toLowerCase() === "done")
+  const archived = decks.filter(deck => deck.status && deck.status.toLowerCase() === "archive")
+
+
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
-        <Box textAlign="center" fontSize="xl">
-          <HStack ml="10" mr="10" mt="10">
-            <Heading>All Decks</Heading>
+        <Box textAlign="center">
+          <HStack ml="8" mr="8" mt="8">
+            <Heading size="md">Home</Heading>
             <Spacer />
-            <Link href="https://chrome.google.com/webstore/detail/sip-sales-extension/imkmdeidjgpjhccbamgpchddhmmfbagg?hl=en&authuser=0" target="_blank"><Button size="lg">Install Extension</Button></Link>
+            <Link href="https://chrome.google.com/webstore/detail/sip-sales-extension/imkmdeidjgpjhccbamgpchddhmmfbagg?hl=en&authuser=0" target="_blank"><Button size="md">Install Extension</Button></Link>
             <LoginButton />
           </HStack>
-          {user && <Text>Current user: {user.uid}</Text>} {/* add a conditional check for user object */}
-          <Divider mt="10" mb="10"/>
+          <Divider mt="8" mb="8"/>
           <HStack align={"flex-start"} justify="space-evenly" w="full">
-            <VStack bg="orange.50" p="30px" rounded="xl">
-                <Heading>No Status</Heading>
-                <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
-                  { /* map over the decks and display them */ }
-                  {decks.map((deck) => (
-                    !deck.status && <DeckCard deck={deck} />
-                  ))}
-                </SimpleGrid>
-              </VStack>
-            <VStack bg="yellow.50" p="30px" rounded="xl">
-              <Heading>Decks in Progress</Heading>
-              <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
-                { /* map over the decks and display them */ }
-                {decks.map((deck) => (
-                  deck.status && deck.status.toLowerCase() === "in progress" && <DeckCard deck={deck} />
-                ))}
-              </SimpleGrid>
-            </VStack>
-            <VStack bg="green.50" p="30px" rounded="xl">
-              <Heading>Decks Published</Heading>
-              <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10"> 
-                { /* map over the decks and display them */ }
-                {decks.map((deck) => (
-                  deck.status && deck.status.toLowerCase() === "done" && <DeckCard deck={deck} />
-                ))}
-              </SimpleGrid>
-            </VStack>
-            <VStack bg="red.50" p="30px" rounded="xl">
-              <Heading>Decks Archived</Heading>
-              <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
-                { /* map over the decks and display them */ }
-                {decks.map((deck) => (
-                  deck.status && deck.status.toLowerCase() === "archive" && <DeckCard deck={deck} />
-                ))}
-              </SimpleGrid>
-            </VStack>
+            <StatusColumn status="No Status" decks={noStatus} />
+            <StatusColumn status="In Progress" decks={inProgress} />
+            <StatusColumn status="Published" decks={published} />
+            <StatusColumn status="Archived" decks={archived} />
           </HStack>
-
           <Heading>All Decks</Heading>
           <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(200px, 1fr))' margin="20" mt="10">
             { /* map over the decks and display them */ }
