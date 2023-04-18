@@ -193,7 +193,7 @@ const EditContactCard = ({ deckId, props, personalNote, currColor }) => {
 
   if (editing) {
     return (
-      <Card variant={"filled"} color={"white"} size="sm" p="2" w="85%" ml="8%" mr="8%" bg={color}>
+      <Card variant={"filled"} color={"white"} size="sm" p="2" w="85%" ml="8%" mr="8%" bg={"darkgrey"}>
         <HStack>
           <Editable defaultValue={note} w="80%" placeholder="Add Personal Note">
             <Tooltip label="Click to edit your personal note">
