@@ -17,6 +17,17 @@ const LoginButton = () => {
   const navigate = useNavigate()
 
   function addNewUserToFirestore(user) {
+    // TODO:identify newly created user within posthog
+    /*
+    client.identify({
+        distinctId: 'distinct_id',
+        properties: {
+            name: 'Max Hedgehog',
+            email: 'max@hedgehogmail.com',
+        },
+    })
+    Replace distinct_id with the user.uid
+    */
     const details = {
       email: user.email,
       name: user.displayName,
