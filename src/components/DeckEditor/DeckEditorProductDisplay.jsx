@@ -15,6 +15,15 @@ import {
   UnorderedList,
   ListItem,
   VStack,
+  Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  useDisclosure,
+  Center,
 } from '@chakra-ui/react';
 import {
   ChevronDownIcon,
@@ -31,6 +40,32 @@ import {
   updateDoc,
   getDoc,
 } from 'firebase/firestore';
+import Mockup from '../../Pages/ProductEditor';
+
+// TODO: Move this to a more appropriate place
+const CustomizeProductImageModal = ({ product }) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    return (
+      <>
+        <Box onClick={onOpen} w="full" h="full">Personalize Product Image</Box>
+        <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Upload, position, and resize a transparent logo</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+            <Center>
+            <Mockup src={product.image} deckId={product.deckId} productId={product.id} 
+              // if product.customImage is not null, use that, otherwise use product.image
+              customImage={product.customImage ? product.customImage : ""}/>
+          </Center>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </>
+    )
+  }
+
 
 const DeckEditorProductDisplay = ({ product }) => {
   let displayArray = [];
@@ -84,6 +119,7 @@ const DeckEditorProductDisplay = ({ product }) => {
             <MenuItem minH="48px">
               <EditProductButton productId={product.id} />
             </MenuItem>
+            <MenuItem minH="48px"><CustomizeProductImageModal product={product}/></MenuItem>
             <MenuItem
               icon={<DeleteIcon boxSize={4} />}
               onClick={handleDelete}

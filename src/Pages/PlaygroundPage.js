@@ -1,5 +1,6 @@
 import FloatingAddButton from '../components/DeckEditor/FloatingButton';
-import { doc, collection, query, where } from 'firebase/firestore';
+import { doc, collection, query, where, updateDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   useFirestore,
   useFirestoreDocData,
@@ -24,6 +25,31 @@ const PlaygroundPage = () => {
     { idField: 'id' }
   );
 
+  const handleDeckUpdate = async (updatedDeck) => {
+    try {
+      await updateDoc(deckRef, updatedDeck);
+    } catch (error) {
+      console.error('Error updating deck:', error);
+    }
+  };
+
+  const handleClientLogoUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    // Upload the image to Firebase Storage
+    const storage = getStorage();
+    const storageRef = ref(storage, `clientLogos/${file.name}`);
+    await uploadBytes(storageRef, file);
+  
+    // Get the uploaded image URL
+    const imageURL = await getDownloadURL(storageRef);
+  
+    // Update the Firestore field with the new client logo URL
+    handleDeckUpdate({ ...deck, clientLogo: imageURL });
+  };
+  
+
   if (deckStatus === 'loading' || productsStatus === 'loading') {
     return (
       <VStack>
@@ -44,7 +70,7 @@ const PlaygroundPage = () => {
       {deckStatus === 'loading' && <div>Loading...</div>}
       {productsStatus === 'error' && <div>Error</div>}
       {deckStatus === 'error' && <div>Error</div>}
-      <DeckEditorHeader deck={deck} />
+      <DeckEditorHeader deck={deck} onSubmit={handleDeckUpdate} onClientLogoUpload={handleClientLogoUpload} />
       {activeProducts &&
         activeProducts.map(product => {
           return (

@@ -1,26 +1,72 @@
-/*
-A Header component that allows the user to edit the deck name and upload
-their clients logo. 
-The Deck name will go on the top left and the logo will go on the top right
-*/
-import { Heading, Box, Image, HStack, Spacer } from '@chakra-ui/react';
+import {
+  Heading,
+  Box,
+  Image,
+  HStack,
+  Spacer,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Input,
+  Tooltip,
+} from '@chakra-ui/react';
 
+const DeckEditorHeader = ({ deck, onSubmit, onClientLogoUpload }) => {
+  const handleDeckNameSubmit = nextValue => {
+    onSubmit({ ...deck, name: nextValue });
+  };
 
-const DeckEditorHeader = ({ deck, onSubmit }) => {
-
-  console.log(deck)
-  
   return (
-    <Box w="100%" position="sticky" top="0" zIndex="sticky" bg="#11284a" color="white" overflow="hidden" mb="20">
+    <Box
+      w="100%"
+      position="sticky"
+      top="0"
+      zIndex="sticky"
+      bg="#11284a"
+      color="white"
+      overflow="hidden"
+      mb="20"
+    >
       <HStack pl="8" pr="8">
-        <Heading as="h4" size="lg">
-          {deck.name}
-        </Heading>
+        <Tooltip
+          label="Click to edit the title"
+          aria-label="Click to edit the title"
+        >
+          <Editable
+            defaultValue={deck.name}
+            onSubmit={handleDeckNameSubmit}
+            fontSize="2xl"
+            fontWeight="bold"
+          >
+            <EditablePreview />
+            <EditableInput />
+          </Editable>
+        </Tooltip>
         <Spacer />
-        <Image w="100px" src={deck.clientLogo} />
+        {/* <Image w="100px" src={deck.clientLogo} /> */}
+        <Spacer />
+        <Input
+          type="file"
+          accept="image/*"
+          display="none"
+          onChange={onClientLogoUpload}
+          id="client-logo-upload"
+        />
+        <Tooltip
+          label="Click to upload your client's logo"
+          aria-label="Click to upload your client's logo"
+        >
+          <label htmlFor="client-logo-upload">
+            <Image
+              w="100px"
+              src={deck.clientLogo || '/placeholder-logo.png'} // Replace '/placeholder-logo.png' with a placeholder image URL
+              cursor="pointer"
+            />
+          </label>
+        </Tooltip>
       </HStack>
     </Box>
   );
-}
+};
 
 export default DeckEditorHeader;

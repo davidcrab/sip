@@ -53,7 +53,7 @@ const Mockup = (props) => {
 
   // const { status, data: imageURL } = useStorageDownloadURL(catRef);
   const { status: logoStatus, data: logoURL } = useStorageDownloadURL(logoRef);
-
+  const [showHandles, setShowHandles] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   console.log(props.src)
 
@@ -129,31 +129,34 @@ const Mockup = (props) => {
   }, [props.src, logoURL, isExporting, storage, props.deckId, props.productId]);
 
   const handleExport = () => {
-    setIsExporting(true);
+    setShowHandles(false);
+    setTimeout(() => {
+      setIsExporting(true);
+      setTimeout(() => {
+        setShowHandles(true);
+        setIsExporting(false);
+      }, 100);
+    }, 100);
   };
   
+  
+  
   const handleUploadLogo = (event) => {
-    console.log(event)
-    console.log("HANDLING IMAGE UPLOAD")
-    console.log(event.target.files[0])
     // turn file into URL.
     // set that URL as the src of the image
     let url = URL.createObjectURL(event.target.files[0]);
     setImageFile(url);
-    console.log(url)
   };
 
   if (logoStatus === 'loading') {
     return <span>loading...</span>;
   }
-  console.log(props.customImage)
   /* if props.customImage is true return just that image with text indicating its already been customized*/
   if (props.customImage) {
-    console.log("ALREADY CUSTOMIZED")
     return (
       <div>
         <img src={props.customImage} alt="customized product" />
-        <p>Already Customized</p>
+        <p>Already Customized (Please email davidcrabtree@startupshell.org for additional free custom images)</p>
       </div>
     );
   }
@@ -184,6 +187,44 @@ const Mockup = (props) => {
               backgroundRepeat: 'no-repeat',
             }}
             lockAspectRatio={true}
+            handleStyles={{
+              top: showHandles
+                ? {
+                    cursor: "ns-resize",
+                    height: "12px",
+                    width: "12px",
+                    background: "rgba(0, 0, 0, 0.5)",
+                    borderRadius: "50%",
+                    top: "-6px",
+                    left: "calc(50% - 6px)",
+                    zIndex: 1,
+                  }
+                : {},
+              right: showHandles
+                ? {
+                    cursor: "ew-resize",
+                    height: "12px",
+                    width: "12px",
+                    background: "rgba(0, 0, 0, 0.5)",
+                    borderRadius: "50%",
+                    top: "calc(50% - 6px)",
+                    right: "-6px",
+                    zIndex: 1,
+                  }
+                : {},
+              left: showHandles
+                ? {
+                    cursor: "ew-resize",
+                    height: "12px",
+                    width: "12px",
+                    background: "rgba(0, 0, 0, 0.5)",
+                    borderRadius: "50%",
+                    top: "calc(50% - 6px)",
+                    left: "-6px",
+                    zIndex: 1,
+                  }
+                : {},
+            }}            
           ></Resizable>
         </Draggable>)}
         </div>
