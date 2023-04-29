@@ -36,7 +36,7 @@ const PreviewProduct = ({ product, deckId, productId }) => {
         </div>
         {/* Map the product details array */}
         <Divider m="3" />
-        {product.details.map((detail, index) => (
+        {product.details && product.details.map((detail, index) => (
           <p key={index}>{detail}</p>
         ))}
       </CardBody>

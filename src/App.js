@@ -15,7 +15,7 @@ import { getAuth } from 'firebase/auth'; // Firebase v9+
 import { getStorage } from 'firebase/storage'; // Firebase v9+
 import VendorPage from './Pages/VendorPage';
 import FlexPromo from './Pages/FlexPromo';
-
+import PlaygroundPage from './Pages/PlaygroundPage';
 
 export const App = () => {
 
@@ -48,6 +48,7 @@ const AppInner = () => {
               <Route path="/edit/:id" element={<EditDeck />} />
               <Route path="/view/:id" element={<DeckPage />} />
               <Route path="/vendorStatus" element={<VendorPage />} />
+              <Route path="/playground" element={<PlaygroundPage />} />
             </Routes>
           </BrowserRouter>
         </FirestoreProvider>

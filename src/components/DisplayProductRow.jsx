@@ -12,6 +12,7 @@ import {
   VStack,
   Spacer,
 } from '@chakra-ui/react'
+import FloatingAddButton from './DeckEditor/FloatingButton'
 
 const ProductDetails = ({ product }) => {
 
@@ -26,6 +27,15 @@ const ProductDetails = ({ product }) => {
           return ( 
             <div>
               <ListItem>{description}</ListItem>
+            </div>
+          )
+        })}
+      </UnorderedList>
+      <UnorderedList pl="10px">
+        {product.pricing && product.pricing.map((price) => {
+          return ( 
+            <div>
+              <ListItem>{price}</ListItem>
             </div>
           )
         })}
@@ -66,6 +76,7 @@ const DisplayProductLeft = ({ product }) => {
           )
         })}
       </HStack> */}
+      <FloatingAddButton product={product} />
     </Box>
   )
 }
@@ -113,4 +124,12 @@ const DisplayProductsRow = ({ products }) => {
   )
 }
 
-export default DisplayProductsRow
+// export default { DisplayProductsRow, DisplayProductLeft, DisplayProductRight }
+export default ProductDetails
+/*
+Export the following:
+DisplayProductLeft
+  DisplayProductsRow  
+DisplayProductRight
+  DisplayProductsRow
+*/
