@@ -12,12 +12,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import ProductForm from './ProductForm';
+import AddProductForm from './AddProductForm';
 import { useFirestore } from 'reactfire';
 import { getFirestore, setDoc, collection, doc } from 'firebase/firestore';
 
 
-const FloatingAddButton = () => {
+const FloatingAddButton = ({ deckId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,7 +59,8 @@ const FloatingAddButton = () => {
           <ModalHeader>Add Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ProductForm
+            <AddProductForm
+              deckId={deckId}
               onSubmit={values => {
                 console.log('Form values:', values);
                 handleAdd(values);

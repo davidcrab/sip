@@ -1,4 +1,4 @@
-// ProductForm.js
+// AddProductForm.js
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { getFirestore, collection, doc, getDoc } from 'firebase/firestore';
 
-const EditProductForm = ({ onSubmit, onEdit, productId }) => {
+const EditProductForm = ({ deckId, onSubmit, onEdit, productId }) => {
   // ...formik setup
   // ...useState for notes, details, pricing, descriptions
   const formik = useFormik({
@@ -52,6 +52,7 @@ const EditProductForm = ({ onSubmit, onEdit, productId }) => {
         name: productData.name,
         image: productData.image,
         url: productData.url,
+        deckId: productData.deckId,
       });
 
       setNotes(productData.notes || ['']);
@@ -85,7 +86,7 @@ const EditProductForm = ({ onSubmit, onEdit, productId }) => {
       details,
       pricing,
       descriptions,
-      deckId: 'Version 2 fs',
+      deckId: formik.values.deckId,
       images: [],
     });
   };

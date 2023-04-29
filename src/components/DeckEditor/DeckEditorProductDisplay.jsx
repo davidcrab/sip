@@ -188,8 +188,8 @@ const DeckEditorProductDisplay = ({ product }) => {
             );
           })}
         <Heading size="md">Notes</Heading>
-        {product.productNotes &&
-          product.productNotes.map((note, index) => {
+        {product.notes &&
+          product.notes.map((note, index) => {
             return (
               <Box key={index} textAlign="left">
                 {note}

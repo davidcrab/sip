@@ -59,7 +59,7 @@ const DeckEditorHeader = ({ deck, onSubmit, onClientLogoUpload }) => {
           <label htmlFor="client-logo-upload">
             <Image
               w="100px"
-              src={deck.clientLogo || '/placeholder-logo.png'} // Replace '/placeholder-logo.png' with a placeholder image URL
+              src={deck.clientLogo || '/placeholder-logo.png'} alt="Logo here" // Replace '/placeholder-logo.png' with a placeholder image URL
               cursor="pointer"
             />
           </label>

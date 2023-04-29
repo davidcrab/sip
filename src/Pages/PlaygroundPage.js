@@ -11,14 +11,15 @@ import DeckEditorProductDisplay from '../components/DeckEditor/DeckEditorProduct
 import { VStack, Spinner, Heading } from '@chakra-ui/react';
 
 const PlaygroundPage = () => {
-  const deckRef = doc(useFirestore(), 'decks', 'Version 2 fs');
+  const deckId = 'Test Deck with Sec. Email';
+  const deckRef = doc(useFirestore(), 'decks', deckId);
 
   // subscribe to a document for realtime updates. just one line!
   const { status: deckStatus, data: deck } = useFirestoreDocData(deckRef);
 
   let productsQuery = query(
     collection(useFirestore(), 'showcaseProduct'),
-    where('deckId', '==', 'Version 2 fs')
+    where('deckId', '==', deckId)
   );
   const { status: productsStatus, data: products } = useFirestoreCollectionData(
     productsQuery,
@@ -77,7 +78,7 @@ const PlaygroundPage = () => {
             <DeckEditorProductDisplay key={product.id} product={product} />
           );
         })}
-      <FloatingAddButton />
+      <FloatingAddButton deckId={deckId} />
     </div>
   );
 };
