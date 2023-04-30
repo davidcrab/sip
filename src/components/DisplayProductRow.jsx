@@ -16,6 +16,8 @@ import FloatingAddButton from './DeckEditor/FloatingButton'
 
 const ProductDetails = ({ product }) => {
 
+  console.log("Product from the product details page", product)
+
   return (
     <VStack h="full">
       <Heading as="h4" size="lg">
@@ -76,7 +78,7 @@ const DisplayProductLeft = ({ product }) => {
           )
         })}
       </HStack> */}
-      <FloatingAddButton product={product} />
+      {/* <FloatingAddButton product={product} /> */}
     </Box>
   )
 }
@@ -125,7 +127,7 @@ const DisplayProductsRow = ({ products }) => {
 }
 
 // export default { DisplayProductsRow, DisplayProductLeft, DisplayProductRight }
-export default ProductDetails
+export default DisplayProductsRow
 /*
 Export the following:
 DisplayProductLeft
