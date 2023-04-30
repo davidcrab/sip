@@ -15,9 +15,9 @@ import {
   VStack,
   Badge,
   CardHeader,
-  HStack
+  HStack,
 } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, EditIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react'
@@ -40,6 +40,10 @@ const DeckCard = ({deck}) => {
   const onClick = (id) => {
     console.log("Clicked on " + id)
     navigate(`/edit/` + id)
+  }
+
+  const openEditor = (id) => {
+    navigate(`/editor/` + id)
   }
 
   const setStatus = async (status) => {
@@ -75,8 +79,10 @@ const DeckCard = ({deck}) => {
       <CardFooter w="full">
         <VStack w="full">
           <HStack w="full" justifyContent={"center"}>
-            <Button size="sm" onClick={() => onClick(deck.id)}>Edit</Button>
-            <Button size="sm" as="a" colorScheme='gray' target="_blank" href={"/view/" + deck.id}>View</Button>
+          <Tooltip hasArrow label="New Deck Editor!" bg='yellow.600'>
+          <Button variant='outline' leftIcon={<EditIcon />} onClick={() => openEditor(deck.id)} colorScheme='gray'>Open Editor</Button>
+          </Tooltip>
+            <Button as="a" colorScheme='gray' target="_blank" href={"/view/" + deck.id}>View</Button>
           </HStack>
           <Menu size="sm">
               {({ isOpen }) => (

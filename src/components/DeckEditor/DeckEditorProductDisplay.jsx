@@ -150,7 +150,7 @@ const DeckEditorProductDisplay = ({ product }) => {
           <VStack>
             <Heading size="md">Description</Heading>
             <UnorderedList pl="10px">
-              {product.descriptions.map(description => {
+              {product.descriptions && product.descriptions.map(description => {
                 return (
                   <div>
                     <ListItem>{description}</ListItem>
@@ -162,7 +162,7 @@ const DeckEditorProductDisplay = ({ product }) => {
           <VStack>
             <Heading size="md">Pricing</Heading>
             <UnorderedList pl="10px">
-              {product.pricing &&
+              {product.pricing && Array.isArray(product.pricing) &&
                 product.pricing.map(price => {
                   return (
                     <div>
@@ -179,7 +179,7 @@ const DeckEditorProductDisplay = ({ product }) => {
       <Divider />
       <Box m="4" p="8" bg="gray.100" rounded={'md'}>
         <Heading size="md">Details</Heading>
-        {product.details &&
+        {product.details && product.details &&
           product.details.map((detail, index) => {
             return (
               <Box key={index} textAlign="left">
@@ -188,7 +188,7 @@ const DeckEditorProductDisplay = ({ product }) => {
             );
           })}
         <Heading size="md">Notes</Heading>
-        {product.notes &&
+        {product.notes && product.notes &&
           product.notes.map((note, index) => {
             return (
               <Box key={index} textAlign="left">
@@ -197,7 +197,7 @@ const DeckEditorProductDisplay = ({ product }) => {
             );
           })}
         <Heading size="md">Supplier Pricing</Heading>
-        {product.pricingTable && (
+        {product.pricingTable && product.pricingTable && (
           <div>
             <div
               className="content"
