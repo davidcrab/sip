@@ -52,6 +52,7 @@ const FloatingAddButton = ({ deckId }) => {
         right="2rem"
         zIndex="99"
         onClick={onOpen}
+        className="third-step"
       >Add Product</Button>
       <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />

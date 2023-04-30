@@ -37,6 +37,7 @@ const DeckEditorHeader = ({ deck, onSubmit, onClientLogoUpload }) => {
             onSubmit={handleDeckNameSubmit}
             fontSize="2xl"
             fontWeight="bold"
+            className="first-step"
           >
             <EditablePreview />
             <EditableInput />
@@ -57,10 +58,12 @@ const DeckEditorHeader = ({ deck, onSubmit, onClientLogoUpload }) => {
           aria-label="Click to upload your client's logo"
         >
           <label htmlFor="client-logo-upload">
+          
             <Image
               w="100px"
               src={deck.clientLogo || '/placeholder-logo.png'} alt="Logo here" // Replace '/placeholder-logo.png' with a placeholder image URL
               cursor="pointer"
+              className='second-step'
             />
           </label>
         </Tooltip>
