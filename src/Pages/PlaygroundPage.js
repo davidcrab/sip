@@ -12,9 +12,10 @@ import { VStack, Spinner, Heading, Button } from '@chakra-ui/react';
 import { useTour } from '@reactour/tour';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import EditContactCard from "../components/EditContactCard";
+import { useParams } from 'react-router-dom';
 
 const PlaygroundPage = () => {
-  const deckId = 'Test Deck with Sec. Email';
+  const { id: deckId } = useParams();
   const deckRef = doc(useFirestore(), 'decks', deckId);
   const { setIsOpen } = useTour();
 
