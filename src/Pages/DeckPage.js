@@ -57,7 +57,7 @@ const DeckHeader = data => {
     <Box m="0" position="sticky" top="0" zIndex="sticky" bg="#11284a" color="white">
         {/* <Image ml="85%" w="100px" src={"https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1495074912/n7q6etrr2svn5tkqn1zu.jpg"} /> */}
         <Flex p="8" pt="0" pb="0" align="center">
-          <Heading>{data.tagline}</Heading>
+          <Heading>{data.data}</Heading>
           <Spacer />
           <Image w="100px" src={data.clientLogo} alt="cleint logo" />
         </Flex>
