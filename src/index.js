@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 import { FirebaseAppProvider } from 'reactfire';
-
+import { TourProvider } from '@reactour/tour'
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
@@ -20,12 +20,29 @@ const firebaseConfig = {
   measurementId: "G-47C98JY4NB"
 };
 
+const steps = [
+  {
+    selector: '.first-step',
+    content: 'Edit the name of the deck here.',
+  },
+  {
+    selector: '.second-step',
+    content: 'Upload a client logo here.',
+  },
+  {
+    selector: '.third-step',
+    content: 'Add a product to the deck here.',
+  },
+]
+
 root.render(
   <FirebaseAppProvider firebaseConfig={firebaseConfig}>
     <ChakraProvider theme={theme}>
       <StrictMode>
         <ColorModeScript />
-        <App />
+        <TourProvider steps={steps}>
+          <App />
+        </TourProvider>
       </StrictMode>
     </ChakraProvider>
   </FirebaseAppProvider>
