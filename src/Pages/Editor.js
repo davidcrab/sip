@@ -10,7 +10,7 @@ import DeckEditorHeader from '../components/DeckEditor/DeckEditorHeader';
 import DeckEditorProductDisplay from '../components/DeckEditor/DeckEditorProductDisplay';
 import { VStack, Spinner, Heading, Button } from '@chakra-ui/react';
 import { useTour } from '@reactour/tour';
-import { InfoOutlineIcon } from '@chakra-ui/icons';
+import { InfoOutlineIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import EditContactCard from "../components/EditContactCard";
 import { useParams } from 'react-router-dom';
 
@@ -89,7 +89,7 @@ const PlaygroundPage = () => {
         })}
       <Button
         position="fixed"
-        bottom="5rem"
+        bottom="8rem"
         right="2rem"
         zIndex="99"
         onClick={() => setIsOpen(true)}
@@ -98,6 +98,18 @@ const PlaygroundPage = () => {
         Open Tour
       </Button>
       <FloatingAddButton deckId={deckId} />
+      <Button
+        position="fixed"
+        bottom="2rem"
+        right="2rem"
+        zIndex="99"
+        as='a'
+        href={`/view/${deckId}`}
+        target="_blank"
+        leftIcon={<ExternalLinkIcon />}
+      >
+        View
+      </Button>
     </div>
   );
 };

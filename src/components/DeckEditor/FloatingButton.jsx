@@ -48,7 +48,7 @@ const FloatingAddButton = ({ deckId }) => {
         aria-label="Add button"
         leftIcon={<AddIcon />}
         position="fixed"
-        bottom="2rem"
+        bottom="5rem"
         right="2rem"
         zIndex="99"
         onClick={onOpen}
