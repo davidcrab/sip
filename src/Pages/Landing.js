@@ -16,7 +16,7 @@ Text,
 FormControl,
 FormLabel,
 FormErrorMessage,
-useToast
+useToast,
 } from '@chakra-ui/react';
 import React from 'react';
 import { useNavigate, useLocation  } from 'react-router-dom';
@@ -26,7 +26,7 @@ import deckScreenShot from './deckpage.png';
 import { Field, Form, Formik } from 'formik';
 // get thee firestore stuff
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-
+import PromoPilot from './PromoPilot.png';
 // The below import defines which components come from formik
 function FormikExample() {
   const toast = useToast()
@@ -103,7 +103,7 @@ const Landing = () => {
       <ChakraBaseProvider theme={theme}>
         <Box mb="0">
           <HStack m="5">
-            <Heading color="gray">flexpromo</Heading>
+            <Image src={PromoPilot} w="250px" objectFit='cover'/>
             <Spacer />
             <Button as="a" target="_blank" href={"/flexpromo"} variant="link">Search Products</Button>
             <Button as="a" target="_blank" href={"/vendorStatus"}>Supplier Status</Button>

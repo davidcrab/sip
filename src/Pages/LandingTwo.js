@@ -7,7 +7,7 @@ import deck5 from "./assests/5.png";
 import deck6 from "./assests/6.png";
 import deck7 from "./assests/7.png";
 
-const PlaygroundPage = () => {
+const LandingTwo = () => {
   return (
     <div>
     <Button
@@ -33,4 +33,4 @@ const PlaygroundPage = () => {
   );
 };
 
-export default PlaygroundPage;
+export default LandingTwo;

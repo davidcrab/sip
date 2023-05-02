@@ -17,6 +17,7 @@ import VendorPage from './Pages/VendorPage';
 import FlexPromo from './Pages/FlexPromo';
 import PlaygroundPage from './Pages/PlaygroundPage';
 import Editor from './Pages/Editor';
+import LandingTwo from './Pages/LandingTwo';
 
 export const App = () => {
 
@@ -42,6 +43,7 @@ const AppInner = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/try" element={<LandingTwo />} />
               <Route path="/flexPromo" element={<FlexPromo />} />
               <Route path="/demo" element={<MyDecks />} />
               <Route path="/view" element={<DeckPage />} />
