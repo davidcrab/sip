@@ -1,10 +1,11 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useSigninCheck } from "reactfire";
-import { Button, ChakraProvider, Heading, theme } from "@chakra-ui/react"
+import { Button, ChakraProvider, Heading, theme, Icon } from "@chakra-ui/react"
 import { doc, setDoc, getDoc, getFirestore } from "firebase/firestore"; 
 import { useFirebaseApp, useFirestoreDocData } from "reactfire";
 import {useState} from "react"
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 const LoginButton = () => {
   const provider = new GoogleAuthProvider();
@@ -95,7 +96,10 @@ const LoginButton = () => {
   } else {
     return (
       <ChakraProvider theme={theme}>
-        <Button size='md' colorScheme='blue' onClick={() => onClick()}>Sign in</Button>
+        <Button colorScheme='blue' variant="outline" size="md" onClick={() => onClick()}>
+          <Icon as={FcGoogle} mr="3%" />
+            Continue with Google
+          </Button>
       </ChakraProvider>
     );
   }

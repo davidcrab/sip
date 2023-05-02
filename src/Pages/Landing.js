@@ -101,15 +101,16 @@ const Landing = () => {
   return (
     // <FirestoreProvider sdk={firestoreInstance}>
       <ChakraBaseProvider theme={theme}>
-        <Box mb="0">
-          <HStack m="5">
+        <Box mb="0" position="sticky" top="0" zIndex="sticky" m="0" bg="white">
+          <HStack m="0" position="sticky" top="0" zIndex="sticky" mr="4">
             <Image src={PromoPilot} w="250px" objectFit='cover'/>
             <Spacer />
-            <Button as="a" target="_blank" href={"/flexpromo"} variant="link">Search Products</Button>
-            <Button as="a" target="_blank" href={"/vendorStatus"}>Supplier Status</Button>
-            <Button colorScheme={"yellow"} onClick={onClick} size="md" >Try it out</Button>
+            {/* <Button as="a" target="_blank" href={"/flexpromo"} variant="link">Search Products</Button>
+            <Button as="a" target="_blank" href={"/vendorStatus"}>Supplier Status</Button> */}
+            <Button colorScheme={"blue"} onClick={onClick} size="md">Try it out</Button>
           </HStack>
           <Divider />
+        </Box>
           <VStack margin="30" mb="0" pt="50" pb="50" align="center" textAlign={"center"} ml="5" color="gray">
             <Heading>Create. Personalize. Share.</Heading>
             <Heading>Seamless product showcases for your clients</Heading>
@@ -149,7 +150,6 @@ const Landing = () => {
               <Text>Share the mobile friendly showcase</Text>
             </VStack>
           </Box>
-        </Box>
       </ChakraBaseProvider>
     // </FirestoreProvider>
   );
