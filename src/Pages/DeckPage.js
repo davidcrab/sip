@@ -161,8 +161,13 @@ const Product = product => {
   );
 };
 
-const SalesDeck = () => {
-  const { id: projectId } = useParams();
+const SalesDeck = ({ demoDeck }) => {
+  var { id: projectId } = useParams();
+  if (demoDeck) {
+    console.log(demoDeck)
+    projectId = demoDeck;
+  }
+
   const [ version, setVersion] = React.useState('1.1');
 
   // easily access the Firestore library
@@ -220,7 +225,7 @@ const SalesDeck = () => {
   );
 };
 
-const DeckPage = () => {
+const DeckPage = ( { demoDeck } ) => {
   const firestoreInstance = getFirestore(useFirebaseApp());
 
   const { pathname, search } = useLocation();
@@ -237,10 +242,11 @@ const DeckPage = () => {
     analytics();
   }, [analytics]);
 
+  console.log(demoDeck)
   return (
     <FirestoreProvider sdk={firestoreInstance}>
       <ChakraProvider theme={theme}>
-        <SalesDeck bg="#f8f8f8" />
+        <SalesDeck bg="#f8f8f8" demoDeck={demoDeck} />
       </ChakraProvider>
     </FirestoreProvider>
   );
