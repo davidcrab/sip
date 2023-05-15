@@ -180,6 +180,9 @@ const SalesDeck = ({ demoDeck }) => {
   let productsQuery = query(collection(useFirestore(), "showcaseProduct"), where("deckId", "==", projectId));
   const { status: productsStatus, data: products } = useFirestoreCollectionData(productsQuery, { idField: "id" })
 
+  // filter out with an inactive status
+  products?.filter(product => product.status !== 'inactive');
+  
 
   // easily check the loading status
   if (status === 'loading' || productsStatus === 'loading') {
