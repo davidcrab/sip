@@ -180,8 +180,6 @@ const SalesDeck = ({ demoDeck }) => {
   let productsQuery = query(collection(useFirestore(), "showcaseProduct"), where("deckId", "==", projectId));
   const { status: productsStatus, data: products } = useFirestoreCollectionData(productsQuery, { idField: "id" })
 
-  // filter out with an inactive status
-  products?.filter(product => product.status !== 'inactive');
   
 
   // easily check the loading status
@@ -193,9 +191,13 @@ const SalesDeck = ({ demoDeck }) => {
   if (data.version !== '1.1') {
     productsArray = Object.values(data.products);
     productsArray.sort((a, b) => (a.index > b.index ? 1 : -1));
+    // filter out products with an inactive status
+    productsArray = productsArray.filter(product => product.status !== 'inactive');
   } else {
     productsArray = products;
-    
+
+    // filter out products with an inactive status
+    productsArray = productsArray.filter(product => product.status !== 'inactive');
   }
 
   // i need to query the products colle
